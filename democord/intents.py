@@ -14,10 +14,10 @@ class Intents:
       self._value |= intent.value
 
 
-  def __and__(self, intent : GatewayIntents) -> Self:
+  def __ior__(self, intent : GatewayIntents) -> Self:
     if self._value & intent.value: return self._value
     self._value |= intent.value
-    return self._value
+    return self
 
 
   @property
