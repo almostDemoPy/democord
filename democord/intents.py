@@ -15,9 +15,18 @@ class Intents:
 
 
   def __ior__(self, intent : GatewayIntents) -> Self:
-    if self._value & intent.value: return self._value
+    if self._value & intent.value: return self
     self._value |= intent.value
     return self
+
+
+  def __iand__(self, intent : GatewayIntents) -> Self:
+    self._value &= ~intent.value
+    return self
+
+
+  def __and__(self, intent : GatewayIntents) -> bool:
+    return self._value & intent.value
 
 
   @property
