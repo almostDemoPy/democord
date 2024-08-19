@@ -14,12 +14,9 @@ class Intents:
       self._value |= intent.value
 
 
-  def __invert__(self, other : Intents) -> Self:
-    return ~self._value
-
-
-  def __and__(self, other : Intents) -> Self:
-    self._value |= ~other
+  def __and__(self, intent : GatewayIntents) -> Self:
+    if self._value & intent.value: return self._value
+    self._value |= intent.value
     return self._value
 
 
