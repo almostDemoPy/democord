@@ -4,15 +4,21 @@ from enum import (
 
 
 class PayloadType(Enum):
-  Dispatch     = 0
-  HeartBeat    = 1
-  Identify     = 2
-  Hello        = 10
-  HeartBeatACK = 11
+  Dispatch            = 0
+  HeartBeat           = 1
+  Identify            = 2
+  PresenceUpdate      = 3
+  VoiceStateUpdate    = 4
+  Resume              = 6
+  Reconnect           = 7
+  RequestGuildMembers = 8
+  InvalidSession      = 9
+  Hello               = 10
+  HeartBeatACK        = 11
 
 
 class GatewayEvents(Enum):
-  READY = 1
+  Ready = "READY"
 
 
 class GatewayIntents(Enum):
