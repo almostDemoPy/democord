@@ -36,21 +36,22 @@ class Payload:
 
   @classmethod
   def identify(cls, **kwargs) -> Self:
+    d : dict = {
+      "token"           : kwargs["token"],
+      "properties"      : {
+        "os"            : "linux",
+        "browser"       : "democord",
+        "device"        : "democord"
+      },
+      "intents"         : kwargs.get("intents", 0)
+    }
+    if kwargs.get("compress"): d["compress"] = kwargs["compress"]
+    if kwargs.get("large_threshold"): d["large_threshold"] = kwargs["large_threshold"]
+    if kwargs.get("shard"): d["shard"] = kwargs["shard"]
+    if kwargs.get("presence"): d["presence"] = kwargs["presence"]
     return cls(
       op = PayloadType.Identify,
-      d = {
-        "token"           : kwargs["token"],
-        "properties"      : {
-          "os"            : "linux",
-          "browser"       : "democord",
-          "device"        : "democord"
-        },
-        "compress"        : kwargs.get("compress", False),
-        "large_threshold" : kwargs.get("large_threshold", 50),
-        "shard"           : kwargs.get("shard", None),
-        "presence"        : kwargs.get("presence", None),
-        "intents"         : kwargs.get("intents", 0)
-      }
+      d = d
     )
 
   
