@@ -111,7 +111,7 @@ class DiscordWebSocket:
           )
         case PayloadType.HeartBeatACK:
           if not self.identify_sent:
-            Thread(target = self.identify).start()
+            self.identify()
           asyncio.run(asyncio.sleep(self.heartbeat_interval / 1_000))
           self.post(
             Payload(
