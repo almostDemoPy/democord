@@ -49,34 +49,41 @@ class DiscordWebSocket:
     )
     self.heartbeat_interval : int = None
     self.identify_sent : bool = False
+    self.last_sequence : int | None = None
 
 
   def get(self, endpoint : str) -> dict:
     return loads(requests.get(f"{self.api}{endpoint}").content)
 
 
-  def post(self, payload : Payload) -> None:
+  def post(self, ws, payload : Payload) -> None:
     try:
       print(f"sent     : {payload}")
-      self.connection.send(
+      ws.send(
         dumps(payload.to_json())
       )
     except:
       print_exc()
 
 
-  def identify(self) -> None:
+  def identify(self, ws) -> None:
     payload : Payload = Payload.identify(
       token = self.app._App__token,
       intents = self.app.intents
     )
-    self.post(payload)
-    self.identify_send :  bool = True
+    self.post(ws, payload)
+    self.identify_sent : bool = True
 
 
   def connect(self) -> None:
     # Thread(target = self.connection.run_forever).start()
-    self.connection.run_forever()
+    try:
+      self.connection.run_forever(
+        dispatcher = rel
+      )
+      rel.dispatch()
+    except KeyboardInterrupt:
+      raise KeyboardInterrupt()
 
 
   def on_open(self, ws) -> None:
@@ -99,31 +106,40 @@ class DiscordWebSocket:
     try:
       print(f"received : {loads(message)}")
       payload : Payload = Payload.from_data(loads(message))
+      self.last_sequence : int | None = payload.s
       match payload.op:
         case PayloadType.Hello:
           self.heartbeat_interval : int = payload.d["heartbeat_interval"]
           asyncio.run(asyncio.sleep((self.heartbeat_interval * random()) / 1_000))
           self.post(
+            ws,
             Payload(
               op = PayloadType.HeartBeat,
-              d = payload.s
+              d = self.last_sequence
             )
           )
-        case PayloadType.HeartBeatACK:
           if not self.identify_sent:
-            self.identify()
+            Thread(
+              target = self.identify,
+              args = [
+                ws
+              ]
+            ).start()
+        case PayloadType.HeartBeatACK:
           asyncio.run(asyncio.sleep(self.heartbeat_interval / 1_000))
           self.post(
+            ws,
             Payload(
               op = PayloadType.HeartBeat,
-              d = payload.s
+              d = self.last_sequence
             )
           )
         case PayloadType.HeartBeat:
           self.post(
+            ws,
             Payload(
               op = PayloadType.HeartBeat,
-              d = payload.s
+              d = self.last_sequence
             )
           )
     except KeyboardInterrupt:
