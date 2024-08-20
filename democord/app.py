@@ -1,3 +1,4 @@
+from .events   import AppEvents
 from .intents  import Intents
 from threading import Thread
 from .ws       import DiscordWebSocket
@@ -13,6 +14,7 @@ class App:
     self.__token : str = token
     self._ws : DiscordWebSocket = DiscordWebSocket(self)
     self._intents : Intents = intents if intents else Intents.none()
+    self.__app_events : AppEvents = AppEvents(self)
 
 
   @property
