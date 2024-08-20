@@ -11,6 +11,10 @@ class PayloadType(Enum):
   HeartBeatACK = 11
 
 
+class GatewayEvents(Enum):
+  READY = 1
+
+
 class GatewayIntents(Enum):
   guilds                = 1 << 0
   members               = 1 << 1
