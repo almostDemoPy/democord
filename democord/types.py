@@ -4,6 +4,7 @@ from enum import (
 
 
 class PayloadType(Enum):
+  Dispatch     = 0
   HeartBeat    = 1
   Identify     = 2
   Hello        = 10
