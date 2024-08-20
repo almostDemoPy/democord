@@ -58,7 +58,7 @@ class DiscordWebSocket:
   def post(self, payload : Payload) -> None:
     try:
       print(f"sent     : {payload}")
-      self.connection.send_bytes(
+      self.connection.send(
         dumps(payload.to_json())
       )
     except:
@@ -66,16 +66,17 @@ class DiscordWebSocket:
 
 
   def identify(self) -> None:
-    payload : Payload = Payload(
-      op = PayloadType.Identify,
-      d = {
-        "token": self.app._App__token
-      }
+    payload : Payload = Payload.identify(
+      token = self.app._App__token,
+      intents = self.app.intents
     )
+    self.post(payload)
+    self.identify_send :  bool = True
 
 
   def connect(self) -> None:
-    Thread(target = self.connection.run_forever).start()
+    # Thread(target = self.connection.run_forever).start()
+    self.connection.run_forever()
 
 
   def on_open(self, ws) -> None:
@@ -88,6 +89,10 @@ class DiscordWebSocket:
 
   def on_error(self, ws, error) -> None:
     pass
+
+
+  async def wait(self) -> None:
+    await asyncio.sleep(self.heartbeat_interval / 1_000)
 
 
   def on_message(self, ws, message) -> None:
@@ -121,5 +126,7 @@ class DiscordWebSocket:
               d = payload.s
             )
           )
+    except KeyboardInterrupt:
+      raise KeyboardInterrupt("Program was terminated via Ctrl + C")
     except:
       print_exc()

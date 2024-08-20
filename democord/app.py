@@ -16,7 +16,7 @@ class App:
 
 
   @property
-  def intents(self) -> None:
+  def intents(self) -> int:
     return self._intents.value
 
 

@@ -27,46 +27,39 @@ class Payload:
 
   def to_json(self) -> dict:
     return {
-      "t" : self.t,
-      "s" : self.s,
+      "t"  : self.t,
+      "s"  : self.s,
       "op" : self.op.value,
-      "d" : self.d
+      "d"  : self.d
     }
+
+
+  @classmethod
+  def identify(cls, **kwargs) -> Self:
+    return cls(
+      op = PayloadType.Identify,
+      d = {
+        "token"           : kwargs["token"],
+        "properties"      : {
+          "os"            : "linux",
+          "browser"       : "democord",
+          "device"        : "democord"
+        },
+        "compress"        : kwargs.get("compress", False),
+        "large_threshold" : kwargs.get("large_threshold", 50),
+        "shard"           : kwargs.get("shard", None),
+        "presence"        : kwargs.get("presence", None),
+        "intents"         : kwargs.get("intents", 0)
+      }
+    )
 
   
   @classmethod
   def from_data(cls, data : dict, **kwargs) -> Self:
-    print(kwargs)
     match data["op"]:
       case 1:
         return cls(
           op = PayloadType.HeartBeat
-        )
-      case 2:
-        # d : dict = {
-        #   "token": kwargs["token"],
-        #   "properties": {
-        #     "os": "linux",
-        #     "browser": "democord",
-        #     "device": "democord"
-        #   },
-        #   "compress": kwargs.get("compress", False),
-        #   "large_threshold": kwargs.get("large_threshold", 50)
-        # }
-        return cls(
-          op = PayloadType.Identify,
-          d = {
-            "token": kwargs["token"],
-            "properties": {
-              "os": "linux",
-              "browser": "democord",
-              "device": "democord"
-            },
-            "compress": kwargs.get("compress", False),
-            "large_threshold": kwargs.get("large_threshold", 50),
-            "shard": kwargs.get("shard", None),
-            "presence": kwargs.get("presence", None)
-          }
         )
       case 10:
         return cls(

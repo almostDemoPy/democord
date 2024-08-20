@@ -55,7 +55,7 @@ class Intents:
 
 
   @classmethod
-  async def none(cls) -> Self:
+  def none(cls) -> Self:
     """
     Creates an Intents instance with no passed intent.
 
