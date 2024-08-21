@@ -31,5 +31,11 @@ class App:
     self.ws.connect()
 
 
+  def event(self, func) -> None:
+    match func.__name__:
+      case "on_ready":
+        self.__app_events.add(func)
+
+
   async def on_ready(self) -> None:
     pass
