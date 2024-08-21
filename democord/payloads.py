@@ -1,5 +1,6 @@
 from .types import (
-  PayloadType
+  PayloadType,
+  GatewayEvents
 )
 from typing import (
   Self
@@ -58,6 +59,15 @@ class Payload:
   @classmethod
   def from_data(cls, data : dict, **kwargs) -> Self:
     match data["op"]:
+      case 0:
+        match data["t"]:
+          case "READY": t = GatewayEvents.Ready
+        return cls(
+          op = PayloadType.Dispatch,
+          t = t,
+          s = data["s"],
+          d = data["d"]
+        )
       case 1:
         return cls(
           op = PayloadType.HeartBeat
