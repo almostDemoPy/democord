@@ -131,7 +131,6 @@ class DiscordWebSocket:
         case PayloadType.Dispatch:
           match payload.t:
             case GatewayEvents.Ready:
-              print("calling")
               Thread(target = asyncio.run, args = [self.app._App__app_events.call(payload.t)]).start()
     except KeyboardInterrupt:
       raise KeyboardInterrupt("Program was terminated via Ctrl + C")
