@@ -3,6 +3,7 @@ from asyncio import (
   gather,
   run as async_run
 )
+from threading import Thread
 from .types import (
   GatewayEvents
 )
@@ -23,11 +24,20 @@ class AppEvents:
     self.ready : list = [self.app.on_ready]
 
 
+  def add(self, callback) -> None:
+    print("adding event")
+    match callback.__name__:
+      case "on_ready":
+        self.ready.append(callback)
+        print("event added")
+
+
   async def call(self, event : GatewayEvents) -> None:
     tasks = []
     match event:
       case GatewayEvents.Ready:
         print("called")
         for callback in self.ready:
-          await create_task(callback())
-        print("done")
+          tasks.append(callback())
+    await gather(*tasks)
+    print("done")
