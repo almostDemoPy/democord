@@ -18,7 +18,8 @@ from traceback import (
   print_exc
 )
 from .types import (
-  PayloadType
+  PayloadType,
+  GatewayEvents
 )
 from typing import (
   TYPE_CHECKING
@@ -56,22 +57,22 @@ class DiscordWebSocket:
     return loads(requests.get(f"{self.api}{endpoint}").content)
 
 
-  def post(self, ws, payload : Payload) -> None:
+  def post(self, payload : Payload) -> None:
     try:
       print(f"sent     : {payload}")
-      ws.send(
+      self.connection.send(
         dumps(payload.to_json())
       )
     except:
       print_exc()
 
 
-  def identify(self, ws) -> None:
+  def identify(self) -> None:
     payload : Payload = Payload.identify(
       token = self.app._App__token,
       intents = self.app.intents
     )
-    self.post(ws, payload)
+    self.post(payload)
     self.identify_sent : bool = True
 
 
@@ -98,8 +99,16 @@ class DiscordWebSocket:
     pass
 
 
-  async def wait(self) -> None:
-    await asyncio.sleep(self.heartbeat_interval / 1_000)
+  def send_heartbeat(self, jitter : bool = False, wait : bool = True) -> None:
+    wait_time : int = self.heartbeat_interval
+    if jitter: wait_time *= random()
+    if wait: asyncio.run(asyncio.sleep(wait_time / 1_000))
+    self.post(
+      Payload(
+        op = PayloadType.HeartBeat,
+        d = self.last_sequence
+      )
+    )
 
 
   def on_message(self, ws, message) -> None:
@@ -110,38 +119,20 @@ class DiscordWebSocket:
       match payload.op:
         case PayloadType.Hello:
           self.heartbeat_interval : int = payload.d["heartbeat_interval"]
-          asyncio.run(asyncio.sleep((self.heartbeat_interval * random()) / 1_000))
-          self.post(
-            ws,
-            Payload(
-              op = PayloadType.HeartBeat,
-              d = self.last_sequence
-            )
-          )
+          Thread(target = self.send_heartbeat, kwargs = {"jitter": True}).start()
+        case PayloadType.HeartBeatACK:
           if not self.identify_sent:
             Thread(
-              target = self.identify,
-              args = [
-                ws
-              ]
+              target = self.identify
             ).start()
-        case PayloadType.HeartBeatACK:
-          asyncio.run(asyncio.sleep(self.heartbeat_interval / 1_000))
-          self.post(
-            ws,
-            Payload(
-              op = PayloadType.HeartBeat,
-              d = self.last_sequence
-            )
-          )
+          Thread(target = self.send_heartbeat).start()
         case PayloadType.HeartBeat:
-          self.post(
-            ws,
-            Payload(
-              op = PayloadType.HeartBeat,
-              d = self.last_sequence
-            )
-          )
+          Thread(target = self.send_heartbeat).start()
+        case PayloadType.Dispatch:
+          match payload.t:
+            case GatewayEvents.Ready:
+              print("calling")
+              Thread(target = self.app._App__app_events.call, args = [payload.t]).start()
     except KeyboardInterrupt:
       raise KeyboardInterrupt("Program was terminated via Ctrl + C")
     except:
