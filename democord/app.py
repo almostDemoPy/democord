@@ -29,3 +29,7 @@ class App:
 
   def run(self) -> None:
     self.ws.connect()
+
+
+  async def on_ready(self) -> None:
+    pass
