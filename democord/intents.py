@@ -46,6 +46,13 @@ class Intents(object):
     return ( self._value & intent.value ) == intent.value
 
 
+  def __getitem__(self, intent_name : str | GatewayIntents) -> bool:
+    if isinstance(intent_name, GatewayIntents): intent_name : str = intent_name.name
+    if intent_name not in GatewayIntents.__dict__["_member_names_"]: raise AttributeError(f"No such intent with name: {intent_name}")
+    intent : GatewayIntents = GatewayIntents.__dict__[intent_name]
+    return self & intent
+
+
   @property
   def value(self) -> int:
     """
