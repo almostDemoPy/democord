@@ -65,6 +65,11 @@ class Intents(object):
 
 
   @classmethod
+  def all(cls) -> Self:
+    return cls(*[intent for intent in GatewayIntents])
+
+
+  @classmethod
   def default(cls) -> Self:
     """
     Creates an Intents instance with all, except the privileged ones, intents enabled.
