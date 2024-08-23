@@ -1,6 +1,8 @@
 from .events   import AppEvents
 from .intents  import Intents
 from threading import Thread
+from typing    import Self
+from .user     import User
 from .ws       import DiscordWebSocket
 
 
@@ -15,6 +17,7 @@ class App:
     self._ws : DiscordWebSocket = DiscordWebSocket(self)
     self._intents : Intents = intents if intents else Intents.none()
     self.__app_events : AppEvents = AppEvents(self)
+    self.user : User = None
 
 
   @property
