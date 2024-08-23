@@ -52,6 +52,7 @@ class DiscordWebSocket:
     self.heartbeat_interval : int = None
     self.identify_sent : bool = False
     self.last_sequence : int | None = None
+    self.__resume_gateway_url : str = None
 
 
   def get(self, endpoint : str) -> dict:
@@ -115,6 +116,15 @@ class DiscordWebSocket:
   def setup_ready(self, payload : Payload) -> None:
     user : User = User.from_data(payload.d["user"])
     self.app.user : User = user
+    self.__resume_gateway_url : str = payload.d["resume_gateway_url"]
+    self.app._relationships : list = payload.d["relationships"]
+    self.app._private_channels : list = payload.d["private_channels"]
+    self.app._presences : list = payload.d["presences"]
+    self.app._guilds : list = payload.d["guilds"]
+    self.app._guild_join_requests : list = payload.d["guild_join_requests"]
+    self.app._id : int = int(payload.d["application"]["id"])
+    self.app._flags : int = payload.d["application"]["flags"]
+    Thread(target = asyncio.run, args = [self.app._App__app_events.call(payload.t)]).start()
 
 
   def on_message(self, ws, message) -> None:
@@ -138,7 +148,6 @@ class DiscordWebSocket:
           match payload.t:
             case GatewayEvents.Ready:
               Thread(target = self.setup_ready, args = [payload]).start()
-              Thread(target = asyncio.run, args = [self.app._App__app_events.call(payload.t)]).start()
     except KeyboardInterrupt:
       raise KeyboardInterrupt("Program was terminated via Ctrl + C")
     except:
