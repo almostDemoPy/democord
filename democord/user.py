@@ -10,6 +10,7 @@ class User:
 
   def __getattribute__(self, attribute : str) -> str | int | bool | None:
     match attribute:
+      case "id" | "discriminator": return int(super().__getattribute__(attribute))
       case "global name":
         global_name : str | None = super().__getattribute__(attribute)
         if not global_name: global_name : str = self.username
