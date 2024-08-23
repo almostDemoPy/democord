@@ -3,7 +3,6 @@ class User:
     self,
     data : dict[str, str | bool | int | dict | None]
   ) -> None:
-    print(data)
     for attribute in data:
       self.__dict__[attribute] = data[attribute]
 
