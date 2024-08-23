@@ -28,6 +28,11 @@ class App:
 
 
   @property
+  def application_id(self) -> int:
+    return self._id
+
+
+  @property
   def intents(self) -> int:
     return self._intents.value
 
