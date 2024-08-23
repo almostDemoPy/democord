@@ -1,6 +1,7 @@
 import asyncio
 import rel
 import requests
+from .appinfo import AppInfo
 from json import (
   dumps,
   loads
@@ -122,8 +123,7 @@ class DiscordWebSocket:
     self.app._presences : list = payload.d["presences"]
     self.app._guilds : list = payload.d["guilds"]
     self.app._guild_join_requests : list = payload.d["guild_join_requests"]
-    self.app._id : int = int(payload.d["application"]["id"])
-    self.app._flags : int = payload.d["application"]["flags"]
+    self.app._appinfo : AppInfo = AppInfo.from_data(payload.d["application"])
     Thread(target = asyncio.run, args = [self.app._App__app_events.call(payload.t)]).start()
 
 
