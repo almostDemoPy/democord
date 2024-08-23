@@ -18,6 +18,13 @@ class App:
     self._intents : Intents = intents if intents else Intents.none()
     self.__app_events : AppEvents = AppEvents(self)
     self.user : User = None
+    self._relationships : list = []
+    self._private_channels : list = []
+    self._presences : list = []
+    self._guilds : list = []
+    self._guild_join_requests : list = []
+    self._id : int = None
+    self._flags : int = 0
 
 
   @property
