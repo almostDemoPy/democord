@@ -1,3 +1,4 @@
+from .appinfo  import AppInfo
 from .events   import AppEvents
 from .intents  import Intents
 from threading import Thread
@@ -23,13 +24,12 @@ class App:
     self._presences : list = []
     self._guilds : list = []
     self._guild_join_requests : list = []
-    self._id : int = None
-    self._flags : int = 0
+    self._appinfo : AppInfo = None
 
 
   @property
-  def application_id(self) -> int:
-    return self._id
+  def appinfo(self) -> AppInfo:
+    return self._appinfo
 
 
   @property
