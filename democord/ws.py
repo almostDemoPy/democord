@@ -24,6 +24,7 @@ from .types import (
 from typing import (
   TYPE_CHECKING
 )
+from .user import User
 from websocket import (
   WebSocketApp
 )
@@ -111,6 +112,11 @@ class DiscordWebSocket:
     )
 
 
+  def setup_ready(self, payload : Payload) -> None:
+    user : User = User.from_data(payload.d["user"])
+    self.app.user : User = user
+
+
   def on_message(self, ws, message) -> None:
     try:
       print(f"received : {loads(message)}")
@@ -131,6 +137,7 @@ class DiscordWebSocket:
         case PayloadType.Dispatch:
           match payload.t:
             case GatewayEvents.Ready:
+              Thread(target = self.setup_ready, args = [payload]).start()
               Thread(target = asyncio.run, args = [self.app._App__app_events.call(payload.t)]).start()
     except KeyboardInterrupt:
       raise KeyboardInterrupt("Program was terminated via Ctrl + C")
