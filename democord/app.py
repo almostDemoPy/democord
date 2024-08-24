@@ -28,7 +28,7 @@ class App:
 
 
   @property
-  def appinfo(self) -> AppInfo:
+  def info(self) -> AppInfo:
     return self._appinfo
 
 
