@@ -28,20 +28,20 @@ class Intents(object):
       self._value |= intent.value
 
 
-  def __ior__(self, intent : GatewayIntents) -> Self:
+  def __iadd__(self, intent : GatewayIntents) -> Self:
     if not isinstance(intent, GatewayIntents): raise TypeError(f"Type must be GatewayIntents, not {type(intent)}")
-    if ( self._value & intent.value ) == self._value: return self
+    if ( self._value & intent.value ) == intent.value: return self
     self._value |= intent.value
     return self
 
 
-  def __iand__(self, intent : GatewayIntents) -> Self:
+  def __isub__(self, intent : GatewayIntents) -> Self:
     if not isinstance(intent, GatewayIntents): raise TypeError(f"Type must be GatewayIntents, not {type(intent)}")
     self._value &= ~intent.value
     return self
 
 
-  def __and__(self, intent : GatewayIntents) -> bool:
+  def __contains__(self, intent : GatewayIntents) -> bool:
     if not isinstance(intent, GatewayIntents): raise TypeError(f"Must be GatewayIntents, not {type(intent)}")
     return ( self._value & intent.value ) == intent.value
 
