@@ -19,6 +19,7 @@ class AppInfo:
 
   def __getattribute__(self, attribute : str):
     match attribute:
+      case "flags": return self.__dict__["flags"].value
       case "id": return int(self.__dict__["id"])
       case _: return super().__getattribute__(attribute)
 
