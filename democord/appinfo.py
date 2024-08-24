@@ -19,7 +19,7 @@ class AppInfo:
 
   def __getattribute__(self, attribute : str):
     match attribute:
-      case "flags": return self.__dict__["flags"].value
+      case "flags": return self.__dict__["flags"]
       case "id": return int(self.__dict__["id"])
       case _: return super().__getattribute__(attribute)
 
@@ -31,10 +31,15 @@ class AppInfo:
 
 class AppInfoFlags:
   def __init__(self, bitfield : int) -> None:
-    self.value : int = bitfield
+    self._value : int = bitfield
+
+
+  @property
+  def value(self) -> int:
+    return self._value
 
 
   def __contains__(self, name : str) -> bool:
     flag : ApplicationFlags = ApplicationFlags._member_map_.get(name)
     if not flag: raise AttributeError(f"There is no such Application Flag named: {name}")
-    return ( self.value & flag.value ) == flag.value
+    return ( self._value & flag.value ) == flag.value
