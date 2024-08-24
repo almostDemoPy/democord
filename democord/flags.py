@@ -1,4 +1,7 @@
-class ApplicationFlags:
+from enums import Enum
+
+
+class ApplicationFlags(Enum):
   application_command_badge = 1 << 23
   automod                   = 1 << 6
   embedded                  = 1 << 17
