@@ -54,6 +54,7 @@ class DiscordWebSocket:
     self.identify_sent : bool = False
     self.last_sequence : int | None = None
     self.__resume_gateway_url : str = None
+    self.__session_id : str = None
 
 
   def get(self, endpoint : str) -> dict:
@@ -118,6 +119,7 @@ class DiscordWebSocket:
     user : User = User.from_data(payload.d["user"])
     self.app.user : User = user
     self.__resume_gateway_url : str = payload.d["resume_gateway_url"]
+    self.__session_id : str = payload.d["session_id"]
     self.app._relationships : list = payload.d["relationships"]
     self.app._private_channels : list = payload.d["private_channels"]
     self.app._presences : list = payload.d["presences"]
