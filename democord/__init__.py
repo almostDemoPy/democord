@@ -1,6 +1,6 @@
 from .app     import App
 from .intents import Intents
-from .types   import (
+from .enums   import (
   GatewayIntents
 )
 from .user import User

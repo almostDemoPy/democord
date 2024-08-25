@@ -1,4 +1,4 @@
-from .types import GatewayIntents
+from .enums import GatewayIntents
 from typing import Self
 
 

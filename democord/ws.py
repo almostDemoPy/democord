@@ -18,7 +18,7 @@ from threading import (
 from traceback import (
   print_exc
 )
-from .types import (
+from .enums import (
   PayloadType,
   GatewayEvents
 )

@@ -4,7 +4,7 @@ from asyncio import (
   run as async_run
 )
 from threading import Thread
-from .types import (
+from .enums import (
   GatewayEvents
 )
 from typing import (

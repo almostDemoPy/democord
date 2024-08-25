@@ -1,4 +1,4 @@
-from .types import (
+from .enums import (
   PayloadType,
   GatewayEvents
 )
