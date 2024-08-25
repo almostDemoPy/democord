@@ -1,14 +1,20 @@
 from .app     import App
-from .intents import Intents
 from .enums   import (
   GatewayIntents
 )
-from .user import User
+from .intents import Intents
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+  from .guild import Guild
+  from .user import User
 
 
 __all__ = [
   "App",
   "GatewayIntents",
+  "Guild",
   "Intents",
   "User"
 ]
