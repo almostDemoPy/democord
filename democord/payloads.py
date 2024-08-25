@@ -62,6 +62,7 @@ class Payload:
       case 0:
         match data["t"]:
           case "READY": t = GatewayEvents.Ready
+          case "GUILD_CREATE": t = GatewayEvents.GuildCreate
         return cls(
           op = PayloadType.Dispatch,
           t = t,
