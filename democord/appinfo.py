@@ -6,34 +6,25 @@ from typing import (
 )
 
 
-class CallableInstance:
-  def __init__(self, instance):
-    self.instance = instance
+class AppInfoFlags(int):
+  def __init__(self, value : int) -> None:
+    self.value : int
 
-  def __repr__(self) -> str:
-    return str(self.instance._flags_value)
+  def __call__(self) -> list[str]:
+    return ApplicationFlags._member_names_
 
-
-  def __call__(self):
-    return self.instance
-
-
-class AppInfoFlags:
-  def __get__(self, instance, owner):
-    return CallableInstance(instance)
+  def __int__(self) -> int:
+    return self.value
 
 
 class AppInfo:
-
-  flags = AppInfoFlags()
-
   def __init__(
     self,
     attributes
   ) -> None:
     for attribute in attributes:
       match attribute:
-        case "flags": self.__dict__["_flags_value"] = attributes[attribute]
+        case "flags": self.__dict__["flags"] = AppInfoFlags(attributes[attribute])
         case _: self.__dict__[attribute] = attributes[attribute]
 
 
