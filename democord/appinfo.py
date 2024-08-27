@@ -7,14 +7,15 @@ from typing import (
 
 
 class AppInfoFlags(int):
-  def __init__(self, value : int) -> None:
-    self.value : int
-
   def __call__(self) -> list[str]:
-    return ApplicationFlags._member_names_
+    return [
+      name
+      for name, flag in ApplicationFlags._member_map_.items()
+      if ( self & flag.value ) == flag.value
+    ]
 
   def __int__(self) -> int:
-    return self.value
+    return self
 
 
 class AppInfo:
