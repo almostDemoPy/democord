@@ -7,6 +7,20 @@ from .user     import User
 from .ws       import DiscordWebSocket
 
 
+class CallableGuilds(list):
+  def __call__(self, **kwargs) -> list:
+    if not kwargs: return self
+    return [
+      guild
+      for guild in self
+      if all(
+        guild.__dict__[kwarg] == kwargs[kwarg]
+        for kwarg in kwargs
+        if guild.__dict__.get(kwarg)
+      )
+    ]
+
+
 class App:
   def __init__(
     self,
@@ -22,7 +36,7 @@ class App:
     self._relationships : list = []
     self._private_channels : list = []
     self._presences : list = []
-    self._guilds : list = []
+    self.guilds : list = CallableGuilds()
     self._guild_join_requests : list = []
     self._appinfo : AppInfo = None
 
@@ -48,9 +62,13 @@ class App:
 
   def event(self, func) -> None:
     match func.__name__:
-      case "on_ready":
-        self.__app_events.add(func)
+      case "on_ready": self.__app_events.add(func)
+      case "on_guild_available": self.__app_events.add(func)
 
 
   async def on_ready(self) -> None:
+    pass
+
+
+  async def on_guild_available(self, guild) -> None:
     pass
