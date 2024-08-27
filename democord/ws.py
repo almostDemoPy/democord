@@ -2,6 +2,7 @@ import asyncio
 import rel
 import requests
 from .appinfo import AppInfo
+from .guild import Guild
 from json import (
   dumps,
   loads
@@ -100,7 +101,7 @@ class DiscordWebSocket:
 
 
   def on_error(self, ws, error) -> None:
-    pass
+    print(error)
 
 
   def send_heartbeat(self, jitter : bool = False, wait : bool = True) -> None:
@@ -123,7 +124,6 @@ class DiscordWebSocket:
     self.app._relationships : list = payload.d["relationships"]
     self.app._private_channels : list = payload.d["private_channels"]
     self.app._presences : list = payload.d["presences"]
-    self.app._guilds : list = payload.d["guilds"]
     self.app._guild_join_requests : list = payload.d["guild_join_requests"]
     self.app._appinfo : AppInfo = AppInfo.from_data(payload.d["application"])
     Thread(target = asyncio.run, args = [self.app._App__app_events.call(payload.t)]).start()
@@ -133,7 +133,6 @@ class DiscordWebSocket:
     try:
       print(f"received : {loads(message)}")
       payload : Payload = Payload.from_data(loads(message))
-      self.last_sequence : int | None = payload.s
       match payload.op:
         case PayloadType.Hello:
           self.heartbeat_interval : int = payload.d["heartbeat_interval"]
@@ -146,10 +145,15 @@ class DiscordWebSocket:
           Thread(target = self.send_heartbeat).start()
         case PayloadType.HeartBeat:
           Thread(target = self.send_heartbeat).start()
+        case PayloadType.Reconnect: pass
         case PayloadType.Dispatch:
+          self.last_sequence : int | None = payload.s
           match payload.t:
             case GatewayEvents.Ready:
               Thread(target = self.setup_ready, args = [payload]).start()
+            case GatewayEvents.GuildCreate:
+              guild = Guild.from_data(payload.d)
+              Thread(target = asyncio.run, args = [self.app._App__app_events.call(payload.t, guild = guild)]).start()
     except KeyboardInterrupt:
       raise KeyboardInterrupt("Program was terminated via Ctrl + C")
     except:
