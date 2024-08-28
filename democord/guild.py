@@ -9,6 +9,7 @@ class Guild:
         case "icon" | "splash" | "discovery_splash":
           if data[attribute]: self.__dict__[attribute] = Asset.from_guild(attribute, data)
         case "id": self.__dict__[attribute] = int(data[attribute])
+        case "owner_id": self.__dict__[attribute] = int(data[attribute])
         case _: self.__dict__[attribute] = data[attribute]
 
 
