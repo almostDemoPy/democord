@@ -22,6 +22,7 @@ class Asset:
     asset : Self = cls()
     asset.key : str = guild[asset_type]
     match asset_type:
+      case "discovery_splash": endpoint : str = "discovery_splashes"
       case "icon": endpoint : str = "icons"
       case "splash": endpoint : str = "splashes"
     asset.url : str = f"https://cdn.discordapp.com/{endpoint}/{guild["id"]}/{asset.key}.{"gif" if asset.key.startswith("a_") else "png"}"
