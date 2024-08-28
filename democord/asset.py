@@ -18,8 +18,11 @@ class Asset:
 
 
   @classmethod
-  def from_guild(cls, guild : dict) -> Self:
+  def from_guild(cls, asset_type : str, guild : dict) -> Self:
     asset : Self = cls()
-    asset.key : str = guild["icon"]
-    asset.url : str = f"https://cdn.discordapp.com/icons/{guild["id"]}/{asset.key}.{"gif" if asset.key.startswith("a_") else "png"}"
+    asset.key : str = guild[asset_type]
+    match asset_type:
+      case "icon": endpoint : str = "icons"
+      case "splash": endpoint : str = "splashes"
+    asset.url : str = f"https://cdn.discordapp.com/{endpoint}/{guild["id"]}/{asset.key}.{"gif" if asset.key.startswith("a_") else "png"}"
     return asset
