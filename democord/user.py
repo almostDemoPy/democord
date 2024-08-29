@@ -1,4 +1,6 @@
 from .asset   import Asset
+from .color   import Color
+from .flags   import UserFlags
 from .locales import Locale
 from typing   import Self
 
@@ -14,9 +16,10 @@ class User:
         case "global_name":
           if not data[attribute]: self.__dict__[attribute] = data["username"]
           else: self.__dict__[attribute] = data[attribute]
-        case "avatar" | "banner": self.__dict__[attribute] = Asset.from_user(attribute, data) if data[attribute] else None
-        case "accent_color": self.__dict__[attribute] = Color.from_int(data[attribute])
-        case "locale": self.__dict__[attribute] = Locale._value2member_map_[data[attribute]]
+        case "avatar" | "banner": self.__dict__[attribute] : Asset = Asset.from_user(attribute, data) if data[attribute] else None
+        case "accent_color": self.__dict__[attribute] : Color = Color.from_int(data[attribute])
+        case "locale": self.__dict__[attribute] : Locale = Locale._value2member_map_[data[attribute]]
+        case "flags": self.__dict__[attribute] : list = [name for name, value in UserFlags._member_map_.items() if (data[attribute] & value) == value]
         case _: self.__dict__[attribute] = data[attribute]
 
 
