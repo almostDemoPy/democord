@@ -1,5 +1,6 @@
-from .asset import Asset
-from typing import Self
+from .asset   import Asset
+from .locales import Locale
+from typing   import Self
 
 
 class User:
@@ -15,6 +16,7 @@ class User:
           else: self.__dict__[attribute] = data[attribute]
         case "avatar" | "banner": self.__dict__[attribute] = Asset.from_user(attribute, data) if data[attribute] else None
         case "accent_color": self.__dict__[attribute] = Color.from_int(data[attribute])
+        case "locale": self.__dict__[attribute] = Locale._value2member_map_[data[attribute]]
         case _: self.__dict__[attribute] = data[attribute]
 
 
