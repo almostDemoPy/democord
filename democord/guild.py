@@ -1,15 +1,16 @@
 from .asset import Asset
 from typing import Self
+from .user import User
 
 
 class Guild:
-  def __init__(self, data : dict) -> None:
+  def __init__(self, ws, data : dict) -> None:
     for attribute in data:
       match attribute:
         case "icon" | "splash" | "discovery_splash":
           if data[attribute]: self.__dict__[attribute] = Asset.from_guild(attribute, data)
         case "id": self.__dict__[attribute] = int(data[attribute])
-        case "owner_id": self.__dict__[attribute] = int(data[attribute])
+        case "owner_id": self.__dict__["owner"] = User.from_id(ws, data["owner_id"])
         case _: self.__dict__[attribute] = data[attribute]
 
 
@@ -34,5 +35,5 @@ class Guild:
 
 
   @classmethod
-  def from_data(cls, data : dict) -> Self:
-    return cls(data)
+  def from_data(cls, ws, data : dict) -> Self:
+    return cls(ws, data)
