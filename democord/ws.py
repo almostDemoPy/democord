@@ -59,7 +59,14 @@ class DiscordWebSocket:
 
 
   def get(self, endpoint : str) -> dict:
-    return loads(requests.get(f"{self.api}{endpoint}").content)
+    return loads(
+      requests.get(
+        f"{self.api}{endpoint}",
+        headers = {
+          "Authorization": f"Bot {self.app._App__token}"
+        }
+      ).content
+    )
 
 
   def post(self, payload : Payload) -> None:
@@ -152,7 +159,7 @@ class DiscordWebSocket:
             case GatewayEvents.Ready:
               Thread(target = self.setup_ready, args = [payload]).start()
             case GatewayEvents.GuildCreate:
-              guild = Guild.from_data(payload.d)
+              guild = Guild.from_data(self, payload.d)
               Thread(target = asyncio.run, args = [self.app._App__app_events.call(payload.t, guild = guild)]).start()
     except KeyboardInterrupt:
       raise KeyboardInterrupt("Program was terminated via Ctrl + C")
