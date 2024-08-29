@@ -1,20 +1,20 @@
+from .asset import Asset
+from typing import Self
+
+
 class User:
   def __init__(
     self,
     data : dict[str, str | bool | int | dict | None]
   ) -> None:
     for attribute in data:
-      self.__dict__[attribute] = data[attribute]
-
-
-  def __getattribute__(self, attribute : str) -> str | int | bool | None:
-    match attribute:
-      case "id" | "discriminator": return int(super().__getattribute__(attribute))
-      case "global name":
-        global_name : str | None = super().__getattribute__(attribute)
-        if not global_name: global_name : str = self.username
-        return global_name
-      case _: return super().__getattribute__(attribute)
+      match attribute:
+        case "id" | "discriminator": self.__dict__[attribute] = int(data[attribute])
+        case "global_name":
+          if not data[attribute]: self.__dict__[attribute] = data["username"]
+          else: self.__dict__[attribute] = data[attribute]
+        case "avatar": self.__dict__[attribute] = Asset.from_user(attribute, data) if data[attribute] else None
+        case _: self.__dict__[attribute] = data[attribute]
 
 
   def __getattr__(self, attribute : str) -> None:
@@ -22,5 +22,13 @@ class User:
 
 
   @classmethod
-  def from_data(cls, data : dict) -> None:
+  def from_data(cls, data : dict) -> Self:
     return cls(data)
+
+
+  @classmethod
+  def from_id(cls, ws, user_id : int) -> Self:
+    if ws.app.members(id = user_id): return ws.app.members(id = user_id)[0]
+    user : Self = cls.from_data(ws.get(f"/users/{user_id}"))
+    ws.app.members.append(user)
+    return user
