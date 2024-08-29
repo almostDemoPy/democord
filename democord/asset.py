@@ -35,5 +35,6 @@ class Asset:
     asset.key : str = user[asset_type]
     match asset_type:
       case "avatar": endpoint : str = "avatars"
+      case "banner": endpoint : str = "banners"
     asset.url : str = f"https://cdn.discordapp.com/{endpoint}/{user["id"]}/{asset.key}.{"gif" if asset.key.startswith("a_") else "png"}"
     return asset

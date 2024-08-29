@@ -13,7 +13,7 @@ class User:
         case "global_name":
           if not data[attribute]: self.__dict__[attribute] = data["username"]
           else: self.__dict__[attribute] = data[attribute]
-        case "avatar": self.__dict__[attribute] = Asset.from_user(attribute, data) if data[attribute] else None
+        case "avatar" | "banner": self.__dict__[attribute] = Asset.from_user(attribute, data) if data[attribute] else None
         case _: self.__dict__[attribute] = data[attribute]
 
 
