@@ -21,6 +21,20 @@ class CallableGuilds(list):
     ]
 
 
+class CallableMembers(list):
+  def __call__(self, **kwargs) -> list:
+    if not kwargs: return self
+    return [
+      member
+      for member in self
+      if all(
+        member.__dict__[kwarg] == kwargs[kwarg]
+        for kwarg in kwargs
+        if kwarg.__dict__.get(kwarg)
+      )
+    ]
+
+
 class App:
   def __init__(
     self,
@@ -39,6 +53,7 @@ class App:
     self.guilds : list = CallableGuilds()
     self._guild_join_requests : list = []
     self._appinfo : AppInfo = None
+    self.members : list = CallableMembers()
 
 
   @property
