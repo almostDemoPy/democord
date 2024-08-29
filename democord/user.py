@@ -14,6 +14,7 @@ class User:
           if not data[attribute]: self.__dict__[attribute] = data["username"]
           else: self.__dict__[attribute] = data[attribute]
         case "avatar" | "banner": self.__dict__[attribute] = Asset.from_user(attribute, data) if data[attribute] else None
+        case "accent_color": self.__dict__[attribute] = Color.from_int(data[attribute])
         case _: self.__dict__[attribute] = data[attribute]
 
 
