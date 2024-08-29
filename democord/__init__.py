@@ -1,4 +1,5 @@
 from .app     import App
+from .color import Color
 from .enums   import (
   GatewayIntents
 )
