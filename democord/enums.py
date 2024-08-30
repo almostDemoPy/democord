@@ -40,3 +40,10 @@ class GatewayIntents(Enum):
   automod_configuration = 1 << 20
   automod_execution     = 1 << 21
   polls                 = ( 1 << 24 ) | ( 1 << 25 )
+
+
+class PremiumType(Enum):
+  none          = 0
+  nitro_classic = 1
+  nitro         = 2
+  nitro_basic   = 3
