@@ -1,35 +1,32 @@
 from .asset   import Asset
 from .color   import Color
+from .enums   import PremiumType
 from .flags   import UserFlags
 from .locales import Locale
 from typing   import Self
 
 
 class User:
-  def __init__(
-    self,
-    data : dict[str, str | bool | int | dict | None]
-  ) -> None:
-    for attribute in data:
-      match attribute:
-        case "id" | "discriminator": self.__dict__[attribute] = int(data[attribute])
-        case "global_name":
-          if not data[attribute]: self.__dict__[attribute] = data["username"]
-          else: self.__dict__[attribute] = data[attribute]
-        case "avatar" | "banner": self.__dict__[attribute] : Asset = Asset.from_user(attribute, data) if data[attribute] else None
-        case "accent_color": self.__dict__[attribute] : Color = Color.from_int(data[attribute])
-        case "locale": self.__dict__[attribute] : Locale = Locale._value2member_map_[data[attribute]]
-        case "flags": self.__dict__[attribute] : list = [name for name, value in UserFlags._member_map_.items() if (data[attribute] & value) == value]
-        case _: self.__dict__[attribute] = data[attribute]
-
-
   def __getattr__(self, attribute : str) -> None:
     raise AttributeError(f"User object has no attribute: {attribute}")
 
 
   @classmethod
   def from_data(cls, data : dict) -> Self:
-    return cls(data)
+    user : Self = cls()
+    for attribute in data:
+      match attribute:
+        case "id" | "discriminator": user.__dict__[attribute] = int(data[attribute])
+        case "global_name":
+          if not data[attribute]: user.__dict__[attribute] = data["username"]
+          else: user.__dict__[attribute] = data[attribute]
+        case "avatar" | "banner": user.__dict__[attribute] : Asset = Asset.from_user(attribute, data) if data[attribute] else None
+        case "accent_color": user.__dict__[attribute] : Color = Color.from_int(data[attribute])
+        case "locale": user.__dict__[attribute] : Locale = Locale._value2member_map_[data[attribute]]
+        case "flags": user.__dict__[attribute] : list = [name for name, value in UserFlags._member_map_.items() if (data[attribute] & value) == value]
+        case "premium_type": user.__dict__[attribute] = PremiumType._value2member_map_[data[attribute]]
+        case _: user.__dict__[attribute] = data[attribute]
+    return user
 
 
   @classmethod
