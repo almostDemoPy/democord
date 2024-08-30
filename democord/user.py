@@ -24,6 +24,7 @@ class User:
         case "accent_color": user.__dict__[attribute] : Color = Color.from_int(data[attribute])
         case "locale": user.__dict__[attribute] : Locale = Locale._value2member_map_[data[attribute]]
         case "flags": user.__dict__[attribute] : list = [name for name, value in UserFlags._member_map_.items() if (data[attribute] & value) == value]
+        case "public_flags": user.__dict__[attribute] : list = [name for name, value in UserFlags._member_map_.items() if (data[attribute] & value) == value]
         case "premium_type": user.__dict__[attribute] = PremiumType._value2member_map_[data[attribute]]
         case _: user.__dict__[attribute] = data[attribute]
     return user
