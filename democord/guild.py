@@ -1,6 +1,7 @@
 from .asset import Asset
 from .enums import (
-  DefaultMessageNotification
+  DefaultMessageNotification,
+  ExplicitContentFilter
 )
 from typing import Self
 from .user import User
@@ -15,6 +16,7 @@ class Guild:
         case "id": self.__dict__[attribute] = int(data[attribute])
         case "owner_id": self.__dict__["owner"] = User.from_id(ws, data["owner_id"])
         case "default_message_notifications": self.__dict__[attribute] = DefaultMessageNotification(data[attribute])
+        case "explicit_content_filter": self.__dict__[attribute] = ExplicitContentFilter(data[attribute])
         case _: self.__dict__[attribute] = data[attribute]
 
 
