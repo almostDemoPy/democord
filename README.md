@@ -9,7 +9,7 @@ A Python library for the Discord API
 ![GitHub License](https://img.shields.io/github/license/almostDemoPy/democord)
 
 
-![Static Badge](https://img.shields.io/badge/Python_%3E%3D3.12-4584b6?style=for-the-badge&logo=python)
+![Static Badge](https://img.shields.io/badge/Python_%3E%3D3.12-ffde57?style=for-the-badge&logo=python)
 ![Static Badge](https://img.shields.io/badge/Discord_API-586582?style=for-the-badge&logo=discord)
 
 
