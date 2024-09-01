@@ -63,3 +63,10 @@ class ExplicitContentFilter(Enum):
 class MFALevel(Enum):
   none     = 0
   elevated = 1
+
+
+class PremiumTier(Enum):
+  none   = 0
+  tier_1 = 1
+  tier_2 = 2
+  tier_3 = 3
