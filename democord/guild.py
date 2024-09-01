@@ -3,6 +3,7 @@ from .enums import (
   DefaultMessageNotification,
   ExplicitContentFilter,
   MFALevel,
+  PremiumTier
 )
 from .flags import (
   SystemChannelFlags
@@ -28,6 +29,7 @@ class Guild:
         case "explicit_content_filter": self.__dict__[attribute] = ExplicitContentFilter(data[attribute])
         case "mfa_level": self.__dict__[attribute] = MFALevel(data[attribute])
         case "system_channel_flags": self.__dict__[attribute] = CallableSystemChannelFlags(name for name, flag in SystemChannelFlags._member_map_.items() if (data[attribute] & flag.value) == flag.value)
+        case "premium_tier": self.__dict__[attribute] = PremiumTier(data[attribute]).name
         case _: self.__dict__[attribute] = data[attribute]
 
 
