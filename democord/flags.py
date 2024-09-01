@@ -30,3 +30,12 @@ class UserFlags(Enum):
   certified_moderator  = 1 << 18
   http_bot             = 1 << 19
   active_developer     = 1 << 22
+
+
+class SystemChannelFlags(Enum):
+  suppress_join_notifications = 1 << 0
+  suppress_premium_subscriptions = 1 << 1
+  suppress_guild_reminder_notifications = 1 << 2
+  suppress_join_notification_replies = 1 << 3
+  suppress_role_subscription_purchase_notifications = 1 << 4
+  suppress_role_subscription_purchase_notification_replies = 1 << 5
