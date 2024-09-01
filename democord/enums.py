@@ -47,3 +47,8 @@ class PremiumType(Enum):
   nitro_classic = 1
   nitro         = 2
   nitro_basic   = 3
+
+
+class DefaultMessageNotification(Enum):
+  all_messages  = 0
+  only_mentions = 1
