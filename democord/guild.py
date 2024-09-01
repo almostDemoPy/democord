@@ -1,4 +1,7 @@
 from .asset import Asset
+from .enums import (
+  DefaultMessageNotification
+)
 from typing import Self
 from .user import User
 
@@ -11,6 +14,7 @@ class Guild:
           if data[attribute]: self.__dict__[attribute] = Asset.from_guild(attribute, data)
         case "id": self.__dict__[attribute] = int(data[attribute])
         case "owner_id": self.__dict__["owner"] = User.from_id(ws, data["owner_id"])
+        case "default_message_notifications": self.__dict__[attribute] = DefaultMessageNotification(data[attribute])
         case _: self.__dict__[attribute] = data[attribute]
 
 
