@@ -52,3 +52,9 @@ class PremiumType(Enum):
 class DefaultMessageNotification(Enum):
   all_messages  = 0
   only_mentions = 1
+
+
+class ExplicitContentFilter(Enum):
+  disabled              = 0
+  members_without_roles = 1
+  all_members           = 2
