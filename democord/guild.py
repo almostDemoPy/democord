@@ -26,7 +26,7 @@ class Guild:
           if data[attribute]: self.__dict__[attribute] = Asset.from_guild(attribute, data)
         case "id": self.__dict__[attribute] = int(data[attribute])
         case "owner_id": self.__dict__["owner"] = User.from_id(ws, data["owner_id"])
-        case "default_message_notifications": self.__dict__[attribute] = DefaultMessageNotification(data[attribute])
+        case "default_message_notifications": self.__dict__[attribute] = DefaultMessageNotification(data[attribute]).name
         case "explicit_content_filter": self.__dict__[attribute] = ExplicitContentFilter(data[attribute])
         case "mfa_level": self.__dict__[attribute] = MFALevel(data[attribute]).name
         case "system_channel_flags": self.__dict__[attribute] = CallableSystemChannelFlags(name for name, flag in SystemChannelFlags._member_map_.items() if (data[attribute] & flag.value) == flag.value)
