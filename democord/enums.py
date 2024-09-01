@@ -70,3 +70,10 @@ class PremiumTier(Enum):
   tier_1 = 1
   tier_2 = 2
   tier_3 = 3
+
+
+class NSFWLevel(Enum):
+  default        = 0
+  explicit       = 1
+  safe           = 2
+  age_restricted = 3
