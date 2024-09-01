@@ -2,10 +2,18 @@ from .asset import Asset
 from .enums import (
   DefaultMessageNotification,
   ExplicitContentFilter,
-  MFALevel
+  MFALevel,
+)
+from .flags import (
+  SystemChannelFlags
 )
 from typing import Self
 from .user import User
+
+
+class CallableSystemChannelFlags(list):
+  def __call__(self, flag : SystemChannelFlags) -> bool:
+    return flag.name in self
 
 
 class Guild:
@@ -19,6 +27,7 @@ class Guild:
         case "default_message_notifications": self.__dict__[attribute] = DefaultMessageNotification(data[attribute])
         case "explicit_content_filter": self.__dict__[attribute] = ExplicitContentFilter(data[attribute])
         case "mfa_level": self.__dict__[attribute] = MFALevel(data[attribute])
+        case "system_channel_flags": self.__dict__[attribute] = CallableSystemChannelFlags(name for name, flag in SystemChannelFlags._member_map_.items() if (data[attribute] & flag.value) == flag.value)
         case _: self.__dict__[attribute] = data[attribute]
 
 
