@@ -58,3 +58,8 @@ class ExplicitContentFilter(Enum):
   disabled              = 0
   members_without_roles = 1
   all_members           = 2
+
+
+class MFALevel(Enum):
+  none     = 0
+  elevated = 1
