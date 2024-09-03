@@ -83,8 +83,9 @@ class App:
       case "on_guild_available": self.__app_events.add(func)
 
 
-  async def fetch_guild(self, guild_id : int, /) -> Guild | None:
-    return Guild.from_data(self.ws, self.ws.get(GET.guild(guild_id)))
+  async def fetch_guild(self, guild_id : int, /, *, with_counts : bool = False) -> Guild | None:
+    assert isinstance(with_counts, bool), "with_counts argument must be a boolean"
+    return Guild.from_data(self.ws, self.ws.get(GET.guild(guild_id, with_counts)))
 
 
   async def on_ready(self) -> None:
