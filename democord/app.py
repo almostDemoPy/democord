@@ -1,6 +1,8 @@
 from .appinfo  import AppInfo
 from .events   import AppEvents
+from .guild    import Guild
 from .intents  import Intents
+from .reqs     import GET
 from threading import Thread
 from typing    import Self
 from .user     import User
@@ -30,7 +32,7 @@ class CallableMembers(list):
       if all(
         member.__dict__[kwarg] == kwargs[kwarg]
         for kwarg in kwargs
-        if kwarg.__dict__.get(kwarg)
+        if kwargs.get(kwarg)
       )
     ]
 
@@ -81,9 +83,13 @@ class App:
       case "on_guild_available": self.__app_events.add(func)
 
 
+  async def fetch_guild(self, guild_id : int, /) -> Guild | None:
+    return Guild.from_data(self.ws, self.ws.get(GET.guild(guild_id)))
+
+
   async def on_ready(self) -> None:
     pass
 
 
-  async def on_guild_available(self, guild) -> None:
+  async def on_guild_available(self, guild : Guild) -> None:
     pass
