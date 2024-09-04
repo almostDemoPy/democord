@@ -9,4 +9,5 @@ class Member:
     for attribute in data:
       match attribute:
         case "user": member.__dict__[attribute] : User = User.from_data(data[attribute])
+        case "nick": member.__dict__[attribute] : str  = data[attribute]
     return member
