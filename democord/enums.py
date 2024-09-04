@@ -18,8 +18,9 @@ class PayloadType(Enum):
 
 
 class GatewayEvents(Enum):
-  Ready = "READY"
   GuildCreate = "GUILD_CREATE"
+  Ready       = "READY"
+  Resumed     = "RESUMED"
 
 
 class GatewayIntents(Enum):
