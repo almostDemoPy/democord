@@ -73,6 +73,11 @@ class Payload:
         return cls(
           op = PayloadType.HeartBeat
         )
+      case 7:
+        return cls(
+          op = PayloadType.Reconnect,
+          d = data["d"]
+        )
       case 10:
         return cls(
           op = PayloadType.Hello,
