@@ -8,3 +8,6 @@ class GET(Enum):
 
 class PATCH(Enum):
   guild = lambda guild_id: f"/guilds/{guild_id}"
+
+class DELETE(Enum):
+  guild = lambda guild_id: f"/guilds/{guild_id}"
