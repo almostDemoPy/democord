@@ -6,8 +6,15 @@ from .enums import (
   NSFWLevel,
   PremiumTier
 )
+from .errors import (
+  MissingArguments
+)
 from .flags import (
   SystemChannelFlags
+)
+from .reqs import (
+  GET,
+  PATCH
 )
 from typing import Self
 from .user import User
@@ -41,11 +48,19 @@ class Guild:
 
   async def edit(
     self,
-    *,
-    name : str = None,
-    reason : str = None
+    *attributes
   ) -> Self:
-    pass
+    if not attributes: raise MissingArguments("Arguments are required to be filled in this method")
+    data : dict = {}
+    for attribute in attributes:
+      match attribute:
+        case "name":
+          assert isinstance(data[attribute], str), "NAME argument must be a STR"
+          data[attribute] : str = name
+    return self.ws.post(
+      PATCH.guild,
+      data = data
+    )
 
 
   @classmethod
