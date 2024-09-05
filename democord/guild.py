@@ -42,6 +42,7 @@ class Guild:
   @classmethod
   def from_data(cls, ws, data : dict) -> Self:
     guild : Self = cls()
+    guild.__dict__["ws"] = ws
     for attribute in data:
       match attribute:
         case "icon" | "splash" | "discovery_splash":
