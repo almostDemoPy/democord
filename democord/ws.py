@@ -74,7 +74,7 @@ class DiscordWebSocket:
     )
 
   def post(self, endpoint : str, data : dict, reason : str) -> dict:
-    return laods(
+    return loads(
       requests.post(
         f"{self.api}{endpoint}",
         headers = {
