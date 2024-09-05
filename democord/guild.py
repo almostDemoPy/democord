@@ -55,8 +55,10 @@ class Guild:
     for attribute in attributes:
       match attribute:
         case "name":
-          assert isinstance(data[attribute], str), "NAME argument must be a STR"
+          assert isinstance(data[attribute], str), "Guild.name argument must be of type 'str'"
           data[attribute] : str = name
+        case "description":
+          assert isinstance(data[attribute], (str, None)), "Guild.description must be of type 'str' or 'None'"
     reason : str = str(attributes.get("reason"))
     return self.ws.post(
       PATCH.guild,
