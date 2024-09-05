@@ -57,9 +57,11 @@ class Guild:
         case "name":
           assert isinstance(data[attribute], str), "NAME argument must be a STR"
           data[attribute] : str = name
+    reason : str = str(attributes.get("reason"))
     return self.ws.post(
       PATCH.guild,
-      data = data
+      data = data,
+      reason = reason
     )
 
 
