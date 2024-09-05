@@ -39,6 +39,15 @@ class Guild:
     return self.name
 
 
+  async def edit(
+    self,
+    *,
+    name : str = None,
+    reason : str = None
+  ) -> Self:
+    pass
+
+
   @classmethod
   def from_data(cls, ws, data : dict) -> Self:
     guild : Self = cls()
