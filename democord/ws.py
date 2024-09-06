@@ -161,7 +161,7 @@ class DiscordWebSocket:
 
 
   def on_error(self, ws, error) -> None:
-    print(error)
+    print_exc()
 
 
   def send_heartbeat(self, jitter : bool = False, wait : bool = True) -> None:
