@@ -5,9 +5,11 @@ from datetime import (
 
 class Logger:
   def __init__(
-    self
+    self,
+    *,
+    _format : str = "%Y-%m-%d %H:%M:%S"
   ) -> None:
-    self._format : str = "%Y-%m-%d %H:%M:%S.%f"
+    self._format : str = _format
 
   def info(self, message : str) -> None:
     current_time : datetime = datetime.now()
