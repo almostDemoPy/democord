@@ -48,6 +48,7 @@ class Logger:
     )
 
   def debug(self, message : str) -> None:
+    if not self.debug_mode: return self.error("DEBUG_MODE is not enabled for this logger")
     self._log(
       log_type = "DEBUG",
       message = message
