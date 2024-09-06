@@ -25,7 +25,7 @@ from .enums import (
 )
 from .reqs import (
   GET,
-  POST
+  PATCH
 )
 from typing import (
   TYPE_CHECKING
