@@ -2,6 +2,7 @@ from .appinfo  import AppInfo
 from .events   import AppEvents
 from .guild    import Guild
 from .intents  import Intents
+from .logger   import Logger
 from .reqs     import GET
 from threading import Thread
 from typing    import Self
@@ -42,7 +43,8 @@ class App:
     self,
     token : str = None,
     *,
-    intents : Intents | None = None
+    intents : Intents | None = None,
+    logger : bool = False
   ) -> None:
     self.__token : str = token
     self._ws : DiscordWebSocket = DiscordWebSocket(self)
@@ -56,6 +58,7 @@ class App:
     self._guild_join_requests : list = []
     self._appinfo : AppInfo = None
     self.members : list = CallableMembers()
+    self.logger : Logger | None = Logger() if logger else None
 
 
   @property
