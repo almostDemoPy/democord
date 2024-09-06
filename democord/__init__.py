@@ -4,6 +4,7 @@ from .enums   import (
   GatewayIntents
 )
 from .intents import Intents
+from .logger import Logger
 
 from typing import TYPE_CHECKING
 
