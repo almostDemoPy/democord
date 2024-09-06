@@ -60,6 +60,10 @@ class Guild:
     return self.name
 
 
+  async def fetch_channel(self, channel_id : int) -> None:
+    pass
+
+
   async def edit(
     self,
     *attributes
