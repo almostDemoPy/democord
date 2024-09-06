@@ -25,6 +25,20 @@ class CallableSystemChannelFlags(list):
     return flag.name in self
 
 
+class CallableGuildChannels(list):
+  def __call__(self, **kwargs) -> list:
+    if not args: return self
+    return [
+      guild_channel
+      for guild_channel in self
+      if all(
+        guild_channel.__dict__[kwarg] == kwargs[kwarg]
+        for kwarg in kwargs
+        if guild_channel.__dict__.get(kwarg)
+      )
+    ]
+
+
 class Guild:
   def __eq__(self, guild) -> bool:
     assert isinstance(guild, (Guild, int)), f"Must be of type Guild or int, not {type(guild)}"
@@ -84,4 +98,5 @@ class Guild:
         case "premium_tier": guild.__dict__[attribute] = PremiumTier(data[attribute]).name
         case "nsfw_level": guild.__dict__[attribute] = NSFWLevel(data[attribute]).name
         case _: guild.__dict__[attribute] = data[attribute]
+    guild.channels : CallableGuildChannels(ws, guild)
     return guild
