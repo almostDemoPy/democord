@@ -11,10 +11,12 @@ class Logger:
   def __init__(
     self,
     *,
+    debug_mode : bool = False,
     time_format : str = "%Y-%m-%d %H:%M:%S"
   ) -> None:
     self._format : str = time_format
     self.max_type_length : int = 7
+    self.debug_mode : bool = debug_mode
 
   def _log(self, *, log_type : str, message : str) -> None:
     log_colors : dict[str, str] = {
