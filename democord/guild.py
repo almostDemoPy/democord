@@ -1,4 +1,7 @@
 from .asset import Asset
+from .channels import (
+  GuildChannel
+)
 from .enums import (
   DefaultMessageNotification,
   ExplicitContentFilter,
@@ -87,6 +90,10 @@ class Guild:
             if not isinstance(attributes[attribute], ExplicitContentFilter):
               raise TypeError("Guild.explicit_content_filter must be of type <ExplicitContentFilter[Enum]>")
             data[attribute] : int = attributes[attribute].value
+          case "afk_channel_id":
+            if not isinstance(attributes[attribute], (GuildChannel, int)):
+              raise TypeError("Guild.afk_channel_id must either be a <GuildChannel> or <int>")
+            data[attribute] : int = int(attributes[attribute])
     except TypeError as error:
       if self.app.logger: self.app.logger.error(error)
     reason : str = str(attributes.get("reason"))
