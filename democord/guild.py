@@ -67,10 +67,14 @@ class Guild:
     for attribute in attributes:
       match attribute:
         case "name":
-          assert isinstance(data[attribute], str), "Guild.name argument must be of type 'str'"
+          assert isinstance(attributes[attribute], str), "Guild.name argument must be of type 'str'"
           data[attribute] : str = name
         case "description":
-          assert isinstance(data[attribute], (str, None)), "Guild.description must be of type 'str' or 'None'"
+          assert isinstance(attributes[attribute], (str, None)), "Guild.description must be of type 'str' or 'None'"
+          data[attribute] : str = attributes[attribute]
+        case "verification_level":
+          if not isinstance(attributes[attribute], VerificationLevel): raise TypeError("verification_level must be of type VerificationLevel[Enum]")
+          data[attribute] : int = attributes[attribute].value
     reason : str = str(attributes.get("reason"))
     return self.ws.post(
       PATCH.guild,
