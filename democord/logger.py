@@ -6,6 +6,7 @@ from datetime import (
   datetime,
   timedelta
 )
+from traceback import TracebackException
 
 class Logger:
   def __init__(
@@ -32,24 +33,26 @@ class Logger:
   def info(self, message : str) -> None:
     self._log(
       log_type = "INFO",
-      message = message
+      message = str(message)
     )
 
-  def error(self, message : str) -> None:
+  def error(self, exception : Exception) -> None:
+    tbexc = TracebackException.from_exception(exception)
+    frame = tbexc.stack[0]
     self._log(
       log_type = "ERROR",
-      message = message
+      message = f"{frame.filename} - Line {frame.lineno:,}\n{frame.line}\n{tbexc.exc_type.__name__}: {tbexc}"
     )
 
   def warn(self, message : str) -> None:
     self._log(
       log_type = "WARNING",
-      message = message
+      message = str(message)
     )
 
   def debug(self, message : str) -> None:
     if not self.debug_mode: return self.error("DEBUG_MODE is not enabled for this logger")
     self._log(
       log_type = "DEBUG",
-      message = message
+      message = str(message)
     )
