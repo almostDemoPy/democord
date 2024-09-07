@@ -44,7 +44,8 @@ class App:
     token : str = None,
     *,
     intents : Intents | None = None,
-    logger : bool = False
+    logger : bool = False,
+    debug_mode : bool = False
   ) -> None:
     self.__token : str = token
     self._ws : DiscordWebSocket = DiscordWebSocket(self)
@@ -58,7 +59,7 @@ class App:
     self._guild_join_requests : list = []
     self._appinfo : AppInfo = None
     self.members : list = CallableMembers()
-    self.logger : Logger | None = Logger() if logger else None
+    self.logger : Logger | None = Logger(debug_mode = debug_mode) if logger else None
 
 
   @property
