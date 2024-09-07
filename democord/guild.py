@@ -6,9 +6,6 @@ from .enums import (
   NSFWLevel,
   PremiumTier
 )
-from .errors import (
-  MissingArguments
-)
 from .flags import (
   SystemChannelFlags
 )
