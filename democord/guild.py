@@ -4,7 +4,8 @@ from .enums import (
   ExplicitContentFilter,
   MFALevel,
   NSFWLevel,
-  PremiumTier
+  PremiumTier,
+  VerificationLevel
 )
 from .flags import (
   SystemChannelFlags
@@ -94,6 +95,7 @@ class Guild:
         case "system_channel_flags": guild.__dict__[attribute] = CallableSystemChannelFlags(name for name, flag in SystemChannelFlags._member_map_.items() if (data[attribute] & flag.value) == flag.value)
         case "premium_tier": guild.__dict__[attribute] = PremiumTier(data[attribute]).name
         case "nsfw_level": guild.__dict__[attribute] = NSFWLevel(data[attribute]).name
+        case "verification_level": guild.__dict__[attribute] = VerificationLevel(data[attribute]).name
         case _: guild.__dict__[attribute] = data[attribute]
     guild.channels : CallableGuildChannels(ws, guild)
     return guild
