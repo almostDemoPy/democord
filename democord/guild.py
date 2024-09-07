@@ -75,6 +75,9 @@ class Guild:
         case "verification_level":
           if not isinstance(attributes[attribute], VerificationLevel): raise TypeError("verification_level must be of type VerificationLevel[Enum]")
           data[attribute] : int = attributes[attribute].value
+        case "default_message_notifications":
+          if not isinstance(attributes[attribute], DefaultMessageNotification): raise TypeError("default_message_notifications must be of type DefaultMessagenotification[Enum]")
+          data[attribute] : int = attributes[attribute].value
     reason : str = str(attributes.get("reason"))
     return self.ws.post(
       PATCH.guild,
