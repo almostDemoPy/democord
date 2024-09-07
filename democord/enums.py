@@ -129,3 +129,11 @@ class PermissionFlags(Enum):
   send_voice_messages                 = 1 << 46
   send_polls                          = 1 << 49
   use_external_apps                   = 1 << 50
+
+
+class VerificationLevel(Enum):
+  none      = 0
+  low       = 1
+  medium    = 2
+  high      = 3
+  very_high = 4
