@@ -90,13 +90,16 @@ class Guild:
             if not isinstance(attributes[attribute], ExplicitContentFilter):
               raise TypeError("Guild.explicit_content_filter must be of type <ExplicitContentFilter[Enum]>")
             data[attribute] : int = attributes[attribute].value
-          case "afk_channel_id":
+          case "afk_channel":
             if not isinstance(attributes[attribute], (GuildChannel, int)):
               raise TypeError("Guild.afk_channel_id must either be a <GuildChannel> or <int>")
             data[attribute] : int = int(attributes[attribute])
           case "afk_timeout":
             if not isinstance(attributes[attribute], int): raise TypeError("Guild.afk_timeout must be of type <int>")
             if attributes[attribute] not in [60, 300, 900, 1_800, 3_600]: raise ValueError("Guild.afk_timeout must be of one of the values: 60, 300, 900, 1800, 3600")
+            data[attribute] : int = attributes[attribute]
+          case "owner_id":
+            if not isinstance(attributes[attribute], int): raise TypeError("Guild.owner_id must be of type <int>")
             data[attribute] : int = attributes[attribute]
     except Exception as error:
       if self.app.logger: self.app.logger.error(error)
