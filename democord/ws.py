@@ -103,6 +103,7 @@ class DiscordWebSocket:
     )
     self.send(payload)
     self.identify_sent : bool = True
+    if self.app.logger and self.app.logger.debug_mode: self.app.logger.debug("Identify payload sent successfully")
 
 
   def connect(self) -> None:
@@ -154,6 +155,7 @@ class DiscordWebSocket:
 
   def on_open(self, ws) -> None:
     print("connection opened")
+    if self.app.logger: self.app.logger.info("Connected to Gateway")
 
 
   def on_close(self, ws, status_code, message) -> None:
@@ -174,6 +176,7 @@ class DiscordWebSocket:
         d = self.last_sequence
       )
     )
+    if self.app.logger and self.app.logger.debug_mode: self.app.logger.debug("Heartbeat sent successfully")
 
 
   def setup_ready(self, payload : Payload) -> None:
@@ -195,9 +198,11 @@ class DiscordWebSocket:
       payload : Payload = Payload.from_data(loads(message))
       match payload.op:
         case PayloadType.Hello:
+          if self.app.logger and self.app.logger.debug_mode: self.app.logger.debug("Received Hello event")
           self.heartbeat_interval : int = payload.d["heartbeat_interval"]
           Thread(target = self.send_heartbeat, kwargs = {"jitter": True}).start()
         case PayloadType.HeartBeatACK:
+          if self.app.logger and self.app.logger.debug_mode: self.app.logger.debug("Received Heartbeat ACK")
           if not self.identify_sent and not self.is_resuming:
             Thread(
               target = self.identify
@@ -212,8 +217,10 @@ class DiscordWebSocket:
           self.last_sequence : int | None = payload.s
           match payload.t:
             case GatewayEvents.Ready:
+              if self.app.logger and self.app.logger.debug_mode: self.app.logger.debug("Received READY event")
               Thread(target = self.setup_ready, args = [payload]).start()
             case GatewayEvents.GuildCreate:
+              if self.app.logger and self.app.logger.debug_mode: self.app.logger.debug("Received GUILD_CREATE event")
               guild = Guild.from_data(self, payload.d)
               Thread(target = asyncio.run, args = [self.app._App__app_events.call(payload.t, guild = guild)]).start()
             case GatewayEvents.Resumed: print("connection resumed")
