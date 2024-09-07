@@ -64,20 +64,31 @@ class Guild:
   ) -> Self:
     if not attributes: raise MissingArguments("Arguments are required to be filled in this method")
     data : dict = {}
-    for attribute in attributes:
-      match attribute:
-        case "name":
-          assert isinstance(attributes[attribute], str), "Guild.name argument must be of type 'str'"
-          data[attribute] : str = name
-        case "description":
-          assert isinstance(attributes[attribute], (str, None)), "Guild.description must be of type 'str' or 'None'"
-          data[attribute] : str = attributes[attribute]
-        case "verification_level":
-          if not isinstance(attributes[attribute], VerificationLevel): raise TypeError("verification_level must be of type VerificationLevel[Enum]")
-          data[attribute] : int = attributes[attribute].value
-        case "default_message_notifications":
-          if not isinstance(attributes[attribute], DefaultMessageNotification): raise TypeError("default_message_notifications must be of type DefaultMessagenotification[Enum]")
-          data[attribute] : int = attributes[attribute].value
+    try:
+      for attribute in attributes:
+        match attribute:
+          case "name":
+            if not isinstance(attributes[attribute], str):
+              raise TypeError("Guild.name must be of type <str>")
+            data[attribute] : str = name
+          case "description":
+            if not isinstance(attributes[attribute], (str, None)):
+              raise TypeError("Guild.description must be of type <str> or <NoneType>")
+            data[attribute] : str = attributes[attribute]
+          case "verification_level":
+            if not isinstance(attributes[attribute], VerificationLevel):
+              raise TypeError("Guild.verification_level must be of type <VerificationLevel[Enum]>")
+            data[attribute] : int = attributes[attribute].value
+          case "default_message_notifications":
+            if not isinstance(attributes[attribute], DefaultMessageNotification):
+              raise TypeError("Guild.default_message_notifications must be of type <DefaultMessagenotification[Enum]>")
+            data[attribute] : int = attributes[attribute].value
+          case "explicit_content_filter":
+            if not isinstance(attributes[attribute], ExplicitContentFilter):
+              raise TypeError("Guild.explicit_content_filter must be of type <ExplicitContentFilter[Enum]>")
+            data[attribute] : int = attributes[attribute].value
+    except TypeError as error:
+      if self.app.logger: self.app.logger.error(error)
     reason : str = str(attributes.get("reason"))
     return self.ws.post(
       PATCH.guild,
