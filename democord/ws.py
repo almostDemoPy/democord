@@ -88,7 +88,7 @@ class DiscordWebSocket:
 
   def send(self, payload : Payload) -> None:
     try:
-      print(f"sent     : {payload}")
+      if self.app.logger and self.app.logger.debug_mode: self.app.logger.debug(f"sent     : {payload}")
       self.connection.send(
         dumps(payload.to_json())
       )
@@ -113,6 +113,7 @@ class DiscordWebSocket:
         dispatcher = rel,
         reconnect = 0
       )
+      rel.signal(2, rel.abort)
       rel.dispatch()
       if self.is_resuming:
         Thread(target = self.send_heartbeat).start()
@@ -127,8 +128,8 @@ class DiscordWebSocket:
           )
         )
         self.is_resuming : bool = False
-    except KeyboardInterrupt:
-      raise KeyboardInterrupt()
+    except KeyboardInterrupt as error:
+      if self.app.logger: self.app.logger.error(error)
 
   def resume(self) -> None:
     self.connection.close()
@@ -154,7 +155,7 @@ class DiscordWebSocket:
     self.connect()
 
   def on_open(self, ws) -> None:
-    print("connection opened")
+    if self.app.logger and self.app.logger.debug_mode: self.app.logger.debug(f"Connection opened with: {self.gateway}")
     if self.app.logger: self.app.logger.info("Connected to Gateway")
 
 
@@ -194,7 +195,7 @@ class DiscordWebSocket:
 
   def on_message(self, ws, message) -> None:
     try:
-      print(f"received : {loads(message)}")
+      if self.app.logger and self.app.logger.debug_mode: self.app.logger.debug(f"received : {loads(message)}")
       payload : Payload = Payload.from_data(loads(message))
       match payload.op:
         case PayloadType.Hello:
