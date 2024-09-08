@@ -24,21 +24,24 @@ class CallableGuilds(list):
     ]
 
 
-class CallableMembers(list):
-  def __call__(self, **kwargs) -> list:
+class CallableUsers(list):
+  def __call__(self, **kwargs) -> list[User] | User | None:
     if not kwargs: return self
-    return [
-      member
-      for member in self
+    matches : list[User] = [
+      user
+      for user in self
       if all(
-        member.__dict__[kwarg] == kwargs[kwarg]
+        user.__dict__[kwarg] == kwargs[kwarg]
         for kwarg in kwargs
-        if kwargs.get(kwarg)
+        if kwargs.__dict__.get(kwarg)
       )
     ]
+    return (matches[0] if len(matches) == 1 else matches) if matches else None
 
 
 class App:
+  users : list[User] = CallableUsers()
+
   def __init__(
     self,
     token : str = None,
@@ -58,7 +61,6 @@ class App:
     self.guilds : list = CallableGuilds()
     self._guild_join_requests : list = []
     self._appinfo : AppInfo = None
-    self.members : list = CallableMembers()
     self.logger : Logger | None = Logger(debug_mode = debug_mode) if logger else None
 
 
