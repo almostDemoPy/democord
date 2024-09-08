@@ -59,6 +59,8 @@ class CallableGuildMembers(list):
 
 
 class Guild:
+  members : list = CallableGuildMembers()
+
   def __eq__(self, guild) -> bool:
     assert isinstance(guild, (Guild, int)), f"Must be of type Guild or int, not {type(guild)}"
     if isinstance(guild, Guild): return self.id == guild.id
