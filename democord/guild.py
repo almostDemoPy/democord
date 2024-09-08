@@ -10,6 +10,7 @@ from .enums import (
   PremiumTier,
   VerificationLevel
 )
+from .file import File
 from .flags import (
   SystemChannelFlags
 )
@@ -101,6 +102,9 @@ class Guild:
           case "owner_id":
             if not isinstance(attributes[attribute], int): raise TypeError("Guild.owner_id must be of type <int>")
             data[attribute] : int = attributes[attribute]
+          case "icon":
+            if not isinstance(attributes[attribute], File): raise TypeError("Guild.icon must be of type <File>")
+            data[attribute] : int = attributes[attribute].data
     except Exception as error:
       if self.app.logger: self.app.logger.error(error)
     reason : str = str(attributes.get("reason"))
