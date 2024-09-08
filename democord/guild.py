@@ -104,9 +104,10 @@ class Guild:
             data[attribute] : int = attributes[attribute]
           case "icon":
             if not isinstance(attributes[attribute], File): raise TypeError("Guild.icon must be of type <File>")
+            if attributes[attribute].filename.endswith(".gif") and "ANIMATED_ICON" not in self.features: raise ValueError("Guild is not available for animated icons")
             data[attribute] : int = attributes[attribute].data
     except Exception as error:
-      if self.app.logger: self.app.logger.error(error)
+      if self.ws.app.logger: self.ws.app.logger.error(error)
     reason : str = str(attributes.get("reason"))
     return self.ws.post(
       PATCH.guild,
