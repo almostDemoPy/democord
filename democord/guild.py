@@ -31,7 +31,7 @@ class CallableSystemChannelFlags(list):
 class CallableGuildChannels(list):
   def __call__(self, **kwargs) -> list:
     if not args: return self
-    return [
+    matches : list = [
       guild_channel
       for guild_channel in self
       if all(
@@ -40,6 +40,7 @@ class CallableGuildChannels(list):
         if guild_channel.__dict__.get(kwarg)
       )
     ]
+    return (matches[0] if len(matches) == 1 else matches) if matches else None
 
 
 class CallableGuildMembers(list):
