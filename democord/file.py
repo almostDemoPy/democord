@@ -1,4 +1,4 @@
-from base64 import base64encode
+from base64 import b64encode
 from os.path import basename
 from typing import Self
 
