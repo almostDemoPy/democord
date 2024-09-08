@@ -3,6 +3,10 @@ from .user  import User
 
 
 class Member:
+  @property
+  def id(self) -> int:
+    return self.user.id
+
   @classmethod
   def from_data(cls, data : dict) -> Self:
     member : Self = cls()
