@@ -43,9 +43,9 @@ class CallableGuildChannels(list):
 
 
 class CallableGuildMembers(list):
-  def __call__(self, **kwargs) -> list[Member]:
+  def __call__(self, **kwargs) -> list[Member] | Member | None:
     if not args: return self
-    return [
+    matches : list[Member] = [
       member
       for member in self
       if all(
@@ -54,6 +54,7 @@ class CallableGuildMembers(list):
         if member.__dict__.get(kwarg)
       )
     ]
+    return (matches[0] if len(matches) == 1 else matches) if matches else None
 
 
 class Guild:
