@@ -14,6 +14,7 @@ from .file import File
 from .flags import (
   SystemChannelFlags
 )
+from .member import Member
 from .reqs import (
   GET,
   PATCH
@@ -37,6 +38,20 @@ class CallableGuildChannels(list):
         guild_channel.__dict__[kwarg] == kwargs[kwarg]
         for kwarg in kwargs
         if guild_channel.__dict__.get(kwarg)
+      )
+    ]
+
+
+class CallableGuildMembers(list):
+  def __call__(self, **kwargs) -> list[Member]:
+    if not args: return self
+    return [
+      member
+      for member in self
+      if all(
+        member.__dict__[kwarg] == kwargs[kwarg]
+        for kwarg in kwargs
+        if member.__dict__.get(kwarg)
       )
     ]
 
