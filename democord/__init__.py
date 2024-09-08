@@ -3,6 +3,7 @@ from .color import Color
 from .enums   import (
   GatewayIntents
 )
+from .file import File
 from .intents import Intents
 from .logger import Logger
 
