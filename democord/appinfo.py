@@ -1,12 +1,12 @@
-from .flags import (
-  ApplicationFlags
-)
+from .flags import  (
+                    ApplicationFlags
+                    )
 from typing import *
 
 
 class AppInfoFlags(int):
   """
-  The application's flags
+  Callable property for AppInfo.flags
   """
 
   def __call__(self) -> List[str]:
@@ -122,19 +122,41 @@ class AppInfo:
   ) -> None:
     for attribute in attributes:
       match attribute:
-        case "flags": self.__dict__["flags"] : Union[int, List[str]] = AppInfoFlags(attributes[attribute])
-        case "bot_public": self.__dict__["public"] : bool = attributes[attribute]
-        case "bot_require_code_grant": self.__dict__["require_code_grant"] : bool = attributes[attribute]
-        case _: self.__dict__[attribute] : Any = attributes[attribute]
+        case "flags"                 : self.__dict__["flags"]              : Union[int, List[str]] = AppInfoFlags(attributes[attribute])
+        case "bot_public"            : self.__dict__["public"]             : bool                  = attributes[attribute]
+        case "bot_require_code_grant": self.__dict__["require_code_grant"] : bool                  = attributes[attribute]
+        case _                       : self.__dict__[attribute]            : Any                   = attributes[attribute]
 
 
-  def __getattribute__(self, attribute : str):
+  def __getattribute__(
+    self,
+    attribute : str
+  ) -> Any:
+    """
+    Returns an attribute, if exists
+
+    Returns
+    -------
+    Any
+    """
+
     match attribute:
       case "id": return int(self.__dict__["id"])
-      case _: return super().__getattribute__(attribute)
+      case _   : return super().__getattribute__(attribute)
 
 
-  def __contains__(self, name : str) -> bool:
+  def __contains__(
+    self,
+    name : str
+  ) -> bool:
+    """
+    Checks whether an application flag exists in AppInfo.flags attribute
+
+    Returns
+    -------
+    bool
+    """
+
     flag : ApplicationFlags = ApplicationFlags._member_map_.get(name)
     if not flag: raise AttributeError(f"There is no such Application Flag named: {name}")
     return ( self.value & flag.value ) == flag.value
@@ -142,9 +164,32 @@ class AppInfo:
 
   @property
   def value(self) -> int:
+    """
+    Returns the bitfield flag value
+
+    Returns
+    -------
+    int
+    """
     return self._flags_value
 
 
   @classmethod
-  def from_data(cls, data : Dict[str, Any]) -> Self:
+  def from_data(
+    cls,
+    data : Dict[str, Any]
+  ) -> Self:
+    """
+    Construct an AppInfo instance from the given dictionary payload
+
+    Parameters
+    ----------
+    data : Dict[str, Any]
+      Dictionary payload of the application's info
+
+
+    Returns
+    -------
+    AppInfo
+    """
     return cls(data)

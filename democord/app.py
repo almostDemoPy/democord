@@ -105,13 +105,13 @@ class App:
     """
     Parameters
     ---------
-    token   : str
+    token : str
       Bot token of the application
 
     intents : Intents
       The valued intents to use
 
-    logger  : Optional[bool]
+    logger : Optional[bool]
       Whether to enable the logger for the application. Defaults to False
 
     debug_mode : Optional[bool]
@@ -121,11 +121,11 @@ class App:
     self.logger               : Optional[Logger] = Logger(debug_mode = debug_mode) if logger else None
     self.user                 : User             = None
     self._appinfo             : AppInfo          = None
-    self._guild_join_requests : list             = []
+    self._guild_join_requests : List             = []
     self._intents             : Intents          = intents if intents else Intents.none()
-    self._presences           : list             = []
-    self._private_channels    : list             = []
-    self._relationships       : list             = []
+    self._presences           : List             = []
+    self._private_channels    : List             = []
+    self._relationships       : List             = []
     self._ws                  : DiscordWebSocket = DiscordWebSocket(self)
     self.__app_events         : AppEvents        = AppEvents(self)
     self.__token              : str              = token
@@ -187,7 +187,7 @@ class App:
       The function to append as an event listener
     """
     match function.__name__:
-      case "on_ready": self.__app_events.add(function)
+      case "on_ready"          : self.__app_events.add(function)
       case "on_guild_available": self.__app_events.add(function)
 
 
@@ -212,7 +212,15 @@ class App:
     Optional[Guild]
     """
     assert isinstance(with_counts, bool), "with_counts argument must be a boolean"
-    return Guild.from_data(self.ws, self.ws.get(GET.guild(guild_id, with_counts)))
+    return Guild.from_data(
+      self.ws,
+      self.ws.get(
+        GET.guild(
+          guild_id,
+          with_counts
+        )
+      )
+    )
 
 
   async def on_ready(self) -> None:

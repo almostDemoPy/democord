@@ -1,29 +1,37 @@
-from enum import (
-  Enum
-)
+from enum   import Enum
+from typing import *
 
 
-class PayloadType(Enum):
-  Dispatch            = 0
-  HeartBeat           = 1
-  Identify            = 2
-  PresenceUpdate      = 3
-  VoiceStateUpdate    = 4
-  Resume              = 6
-  Reconnect           = 7
-  RequestGuildMembers = 8
-  InvalidSession      = 9
-  Hello               = 10
-  HeartBeatACK        = 11
+class DefaultMessageNotification(Enum):
+  """
+  Set default message notification level of a guild
+  """
+  all_messages  = 0
+  only_mentions = 1
+
+
+class ExplicitContentFilter(Enum):
+  """
+  Set explicit content filter level of a guild
+  """
+  disabled              = 0
+  members_without_roles = 1
+  all_members           = 2
 
 
 class GatewayEvents(Enum):
+  """
+  Type of Dispatch gateway event
+  """
   GuildCreate = "GUILD_CREATE"
   Ready       = "READY"
   Resumed     = "RESUMED"
 
 
 class GatewayIntents(Enum):
+  """
+  Gateway intents the application can use
+  """
   guilds                = 1 << 0
   members               = 1 << 1
   moderation            = 1 << 2
@@ -43,43 +51,65 @@ class GatewayIntents(Enum):
   polls                 = ( 1 << 24 ) | ( 1 << 25 )
 
 
-class PremiumType(Enum):
-  none          = 0
-  nitro_classic = 1
-  nitro         = 2
-  nitro_basic   = 3
-
-
-class DefaultMessageNotification(Enum):
-  all_messages  = 0
-  only_mentions = 1
-
-
-class ExplicitContentFilter(Enum):
-  disabled              = 0
-  members_without_roles = 1
-  all_members           = 2
-
-
 class MFALevel(Enum):
+  """
+  Set multi-factor authentication level of a guild
+  """
   none     = 0
   elevated = 1
 
 
+class NSFWLevel(Enum):
+  """
+  Set NSFW level for a guild
+  """
+  default        = 0
+  explicit       = 1
+  safe           = 2
+  age_restricted = 3
+
+
+class PayloadType(Enum):
+  """
+  Type of payload that is received or sent by the socket
+  """
+  Dispatch            = 0
+  HeartBeat           = 1
+  Identify            = 2
+  PresenceUpdate      = 3
+  VoiceStateUpdate    = 4
+  Resume              = 6
+  Reconnect           = 7
+  RequestGuildMembers = 8
+  InvalidSession      = 9
+  Hello               = 10
+  HeartBeatACK        = 11
+
+
 class PremiumTier(Enum):
+  """
+  Tier level of a guild ( AKA Server Boost Tier )
+  """
   none   = 0
   tier_1 = 1
   tier_2 = 2
   tier_3 = 3
 
 
-class NSFWLevel(Enum):
-  default        = 0
-  explicit       = 1
-  safe           = 2
-  age_restricted = 3
+class PremiumType(Enum):
+  """
+  Type of Premium ( Nitro ) subscription the user is subscribed to
+  """
+  none          = 0
+  nitro_classic = 1
+  nitro         = 2
+  nitro_basic   = 3
+
 
 class PermissionFlags(Enum):
+  """
+  Permission flags for a certain context
+  """
   create_instant_invite               = 1 << 0
   kick_members                        = 1 << 1
   ban_members                         = 1 << 2
@@ -132,6 +162,9 @@ class PermissionFlags(Enum):
 
 
 class VerificationLevel(Enum):
+  """
+  Set verification level of a guild
+  """
   none      = 0
   low       = 1
   medium    = 2

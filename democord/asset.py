@@ -43,7 +43,11 @@ class Asset:
 
 
   @classmethod
-  def from_guild(cls, asset_type : str, guild : Dict[str, Any]) -> Self:
+  def from_guild(
+    cls,
+    asset_type : str,
+    guild      : Dict[str, Any]
+  ) -> Self:
     """
     Construct an Asset object from a guild-level
 
@@ -65,13 +69,17 @@ class Asset:
     asset.key : str = guild[asset_type]
     match asset_type:
       case "discovery_splash": endpoint : str = "discovery_splashes"
-      case "icon": endpoint : str = "icons"
-      case "splash": endpoint : str = "splashes"
+      case "icon":             endpoint : str = "icons"
+      case "splash":           endpoint : str = "splashes"
     asset.url : str = f"https://cdn.discordapp.com/{endpoint}/{guild["id"]}/{asset.key}.{"gif" if asset.key.startswith("a_") else "png"}"
     return asset
 
   @classmethod
-  def from_user(cls, asset_type : str, user : Dict[str, Any]) -> Self:
+  def from_user(
+    cls,
+    asset_type : str,
+    user       : Dict[str, Any]
+  ) -> Self:
     """
     Constructs an Asset object from a user-level
 

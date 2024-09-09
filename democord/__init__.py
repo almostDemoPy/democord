@@ -1,17 +1,16 @@
 from .app     import App
-from .color import Color
+from .color   import Color
 from .enums   import (
-  GatewayIntents
-)
-from .file import File
+                     GatewayIntents
+                     )
+from .file    import File
 from .intents import Intents
-from .logger import Logger
-
-from typing import TYPE_CHECKING
+from .logger  import Logger
+from typing   import TYPE_CHECKING
 
 if TYPE_CHECKING:
   from .guild import Guild
-  from .user import User
+  from .user  import User
 
 
 __all__ = [

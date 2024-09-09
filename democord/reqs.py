@@ -1,14 +1,27 @@
 from enum import Enum
+from typing import *
 
 
 class GET(Enum):
-  gateway        = "/gateway"
-  guild          = lambda guild_id, with_counts: f"/guilds/{guild_id}?with_counts={with_counts}"
-  guild_channels = lambda guild_id             : f"/guilds/{guild_id}/channels"
+  """
+  Utilizes the GET API method
+  """
+
+  gateway        : str = "/gateway"
+  guild          : str = lambda guild_id, with_counts: f"/guilds/{guild_id}?with_counts={with_counts}"
+  guild_channels : str = lambda guild_id             : f"/guilds/{guild_id}/channels"
 
 
 class PATCH(Enum):
-  guild = lambda guild_id: f"/guilds/{guild_id}"
+  """
+  Utilizes the PATCH API method
+  """
+
+  guild : str = lambda guild_id: f"/guilds/{guild_id}"
 
 class DELETE(Enum):
-  guild = lambda guild_id: f"/guilds/{guild_id}"
+  """
+  Utilizes the DELETE API method
+  """
+
+  guild : str = lambda guild_id: f"/guilds/{guild_id}"
