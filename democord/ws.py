@@ -58,7 +58,7 @@ class DiscordWebSocket:
     self,
     app : "App"
   ) -> None:
-    self.app                  : App           = app
+    self.app                  : "App"           = app
     self.api_version          : int           = 10
     self.api                  : str           = f"https://discord.com/api/v{self.api_version}"
     self.gateway              : str           = f"{self.get("/gateway")["url"]}?v={self.api_version}&encoding=json"
@@ -102,14 +102,14 @@ class DiscordWebSocket:
       ).content
     )
 
-  def post(
+  def patch(
     self,
     endpoint : str,
     data     : Dict[str, Any],
     reason   : Optional[str]
   ) -> Dict[str, Any]:
     """
-    Utilizes the POST API method with an endpoint call
+    Utilizes the PATCH API method with an endpoint call
 
     Parameters
     ----------
@@ -128,14 +128,15 @@ class DiscordWebSocket:
     """
 
     return loads(
-      requests.post(
+      requests.patch(
         f"{self.api}{endpoint}",
         headers = {
           "Authorization"     : f"Bot {self.app._App__token}",
+          "Content-Type"      : "application/json",
           "X-Audit-Log-Reason": reason
         },
-        data    = data
-      )
+        data    = dumps(data)
+      ).content
     )
 
 
@@ -448,4 +449,4 @@ class DiscordWebSocket:
             case GatewayEvents.Resumed:
               if self.app.logger and self.app.logger.debug_mode: self.app.logger.debug("Connection resumed")
     except Exception as error:
-      if self.app.logger: self.app.logger.error(error)
+      if self.app.logger: return self.app.logger.error(error)

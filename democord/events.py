@@ -48,7 +48,7 @@ class AppEvents:
     self,
     event : GatewayEvents,
     *,
-    guild : Optional[Guild]
+    guild : Optional[Guild] = None
   ) -> None:
     """
     Concurrently call all the event's listener callbacks

@@ -29,9 +29,9 @@ class Payload:
     self,
     *,
     op : PayloadType,
-    d  : Optional[Union[Dict[str, Any], int]],
-    t  : Optional[str],
-    s  : Optional[int]
+    d  : Optional[Union[Dict[str, Any], int]] = None,
+    t  : Optional[str]                        = None,
+    s  : Optional[int]                        = None
   ) -> None:
     self.op : PayloadType                = op
     self.d  : Union[Dict[str, Any], int] = d
@@ -131,8 +131,7 @@ class Payload:
   @classmethod
   def from_data(
     cls,
-    data : Dict[str, Any],
-    **kwargs
+    data : Dict[str, Any]
   ) -> Self:
     """
     Construct a Payload instance from a given dictionary payload data
@@ -154,6 +153,7 @@ class Payload:
         match data["t"]:
           case "READY":        t : GatewayEvents = GatewayEvents.Ready
           case "GUILD_CREATE": t : GatewayEvents = GatewayEvents.GuildCreate
+          case _: t = data["t"]
         return cls(
           op = PayloadType.Dispatch,
           t  = t,

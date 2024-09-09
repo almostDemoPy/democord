@@ -102,7 +102,7 @@ class User:
   @classmethod
   def from_id(
     cls,
-    ws      : DiscordWebSocket,
+    ws      : "DiscordWebSocket",
     user_id : int
   ) -> Self:
     """
@@ -120,7 +120,7 @@ class User:
     -------
     User
     """
-    if ws.app.members(id = user_id): return ws.app.members(id = user_id)
+    if ws.app.users(id = user_id): return ws.app.users(id = user_id)
     user : Self = cls.from_data(ws.get(f"/users/{user_id}"))
-    ws.app.members.append(user)
+    ws.app.users.append(user)
     return user

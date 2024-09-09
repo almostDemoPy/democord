@@ -58,7 +58,7 @@ class CallableUsers(list):
       if all(
         user.__dict__[kwarg] == kwargs[kwarg]
         for kwarg in kwargs
-        if kwargs.__dict__.get(kwarg)
+        if user.__dict__.get(kwarg)
       )
     ]
     return (matches[0] if len(matches) == 1 else matches) if matches else None
@@ -117,9 +117,8 @@ class App:
     debug_mode : Optional[bool]
       Whether to enable debug mode of the logger. This is ignored if logger is False. Defaults to
     """
-    self.guilds               : List[Guild]      = CallableGuilds()
-    self.logger               : Optional[Logger] = Logger(debug_mode = debug_mode) if logger else None
-    self.user                 : User             = None
+    self.__app_events         : AppEvents        = AppEvents(self)
+    self.__token              : str              = token
     self._appinfo             : AppInfo          = None
     self._guild_join_requests : List             = []
     self._intents             : Intents          = intents if intents else Intents.none()
@@ -127,8 +126,9 @@ class App:
     self._private_channels    : List             = []
     self._relationships       : List             = []
     self._ws                  : DiscordWebSocket = DiscordWebSocket(self)
-    self.__app_events         : AppEvents        = AppEvents(self)
-    self.__token              : str              = token
+    self.guilds               : List[Guild]      = CallableGuilds()
+    self.logger               : Optional[Logger] = Logger(debug_mode = debug_mode) if logger else None
+    self.user                 : User             = None
 
 
   @property

@@ -130,7 +130,7 @@ class Guild:
 
   def __eq__(
     self,
-    guild : Guild
+    guild : Self
   ) -> bool:
     """
     Compares whether 2 Guild objects are equal
@@ -169,7 +169,7 @@ class Guild:
 
   def __ne__(
     self,
-    guild : Guild
+    guild : Self
   ) -> bool:
     """
     Compares whether 2 Guild objects are not equal
@@ -208,7 +208,7 @@ class Guild:
 
   async def edit(
     self,
-    *attributes
+    **attributes
   ) -> Self:
     """
     Modify the guild with the new attributes
@@ -283,7 +283,7 @@ class Guild:
           case "name":
             if not isinstance(attributes[attribute], str):
               raise TypeError("Guild.name must be of type <str>")
-            data[attribute] : str = name
+            data[attribute] : str = attributes[attribute]
           
           case "owner":
             if not isinstance(attributes[attribute], User): raise TypeError("Guild.owner must be of type <User>")
@@ -295,12 +295,12 @@ class Guild:
             data[attribute] : int = attributes[attribute].value
 
     except Exception as error:
-      if self.ws.app.logger: self.ws.app.logger.error(error)
+      if self.ws.app.logger: return self.ws.app.logger.error(error)
 
     reason : str = str(attributes.get("reason"))
 
-    return self.ws.post(
-      PATCH.guild,
+    return self.ws.patch(
+      PATCH.guild(self.id),
       data   = data,
       reason = reason
     )
@@ -309,7 +309,7 @@ class Guild:
   @classmethod
   def from_data(
     cls,
-    ws   : DiscordWebSocket,
+    ws   : "DiscordWebSocket",
     data : Dict[str, Any]
   ) -> Self:
     """
