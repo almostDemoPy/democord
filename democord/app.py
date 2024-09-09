@@ -4,10 +4,10 @@ from .guild    import Guild
 from .intents  import Intents
 from .logger   import Logger
 from .reqs     import GET
-from threading import Thread
-from typing    import *
 from .user     import User
 from .ws       import DiscordWebSocket
+from threading import Thread
+from typing    import *
 
 
 class CallableGuilds(list):
