@@ -250,31 +250,6 @@ class Guild:
     try:
       for attribute in attributes:
         match attribute:
-          case "name":
-            if not isinstance(attributes[attribute], str):
-              raise TypeError("Guild.name must be of type <str>")
-            data[attribute] : str = name
-
-          case "description":
-            if not isinstance(attributes[attribute], (str, None)):
-              raise TypeError("Guild.description must be of type <str> or <NoneType>")
-            data[attribute] : str = attributes[attribute]
-
-          case "verification_level":
-            if not isinstance(attributes[attribute], VerificationLevel):
-              raise TypeError("Guild.verification_level must be of type <VerificationLevel[Enum]>")
-            data[attribute] : int = attributes[attribute].value
-
-          case "default_message_notifications":
-            if not isinstance(attributes[attribute], DefaultMessageNotification):
-              raise TypeError("Guild.default_message_notifications must be of type <DefaultMessagenotification[Enum]>")
-            data[attribute] : int = attributes[attribute].value
-          
-          case "explicit_content_filter":
-            if not isinstance(attributes[attribute], ExplicitContentFilter):
-              raise TypeError("Guild.explicit_content_filter must be of type <ExplicitContentFilter[Enum]>")
-            data[attribute] : int = attributes[attribute].value
-          
           case "afk_channel":
             if not isinstance(attributes[attribute], (GuildChannel, int, None)):
               raise TypeError("Guild.afk_channel_id must either be a <GuildChannel> or <int>, or <NoneType> to remove")
@@ -284,15 +259,40 @@ class Guild:
             if not isinstance(attributes[attribute], int): raise TypeError("Guild.afk_timeout must be of type <int>")
             if attributes[attribute] not in [60, 300, 900, 1_800, 3_600]: raise ValueError("Guild.afk_timeout must be of one of the values: 60, 300, 900, 1800, 3600")
             data[attribute] : int = attributes[attribute]
+
+          case "default_message_notifications":
+            if not isinstance(attributes[attribute], DefaultMessageNotification):
+              raise TypeError("Guild.default_message_notifications must be of type <DefaultMessagenotification[Enum]>")
+            data[attribute] : int = attributes[attribute].value
           
-          case "owner":
-            if not isinstance(attributes[attribute], User): raise TypeError("Guild.owner must be of type <User>")
-            data[attribute] : int = attributes[attribute].id
+          case "description":
+            if not isinstance(attributes[attribute], (str, None)):
+              raise TypeError("Guild.description must be of type <str> or <NoneType>")
+            data[attribute] : str = attributes[attribute]
+          
+          case "explicit_content_filter":
+            if not isinstance(attributes[attribute], ExplicitContentFilter):
+              raise TypeError("Guild.explicit_content_filter must be of type <ExplicitContentFilter[Enum]>")
+            data[attribute] : int = attributes[attribute].value
           
           case "icon":
             if not isinstance(attributes[attribute], File): raise TypeError("Guild.icon must be of type <File>")
             if attributes[attribute].filename.endswith(".gif") and "ANIMATED_ICON" not in self.features: raise ValueError("Guild is not available for animated icons")
             data[attribute] : int = attributes[attribute].data
+
+          case "name":
+            if not isinstance(attributes[attribute], str):
+              raise TypeError("Guild.name must be of type <str>")
+            data[attribute] : str = name
+          
+          case "owner":
+            if not isinstance(attributes[attribute], User): raise TypeError("Guild.owner must be of type <User>")
+            data[attribute] : int = attributes[attribute].id
+
+          case "verification_level":
+            if not isinstance(attributes[attribute], VerificationLevel):
+              raise TypeError("Guild.verification_level must be of type <VerificationLevel[Enum]>")
+            data[attribute] : int = attributes[attribute].value
 
     except Exception as error:
       if self.ws.app.logger: self.ws.app.logger.error(error)
