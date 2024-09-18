@@ -6,6 +6,8 @@ from .logger   import Logger
 from .reqs     import GET
 from .user     import User
 from .ws       import DiscordWebSocket
+from dotenv    import load_dotenv
+from os        import getenv
 from threading import Thread
 from typing    import *
 
@@ -96,7 +98,6 @@ class App:
 
   def __init__(
     self,
-    token      : str     = None,
     *,
     intents    : Intents = None,
     logger     : bool    = False,
@@ -105,9 +106,6 @@ class App:
     """
     Parameters
     ---------
-    token : str
-      Bot token of the application
-
     intents : Intents
       The valued intents to use
 
@@ -117,8 +115,11 @@ class App:
     debug_mode : Optional[bool]
       Whether to enable debug mode of the logger. This is ignored if logger is False. Defaults to
     """
+    load_dotenv()
     self.__app_events         : AppEvents        = AppEvents(self)
-    self.__token              : str              = token
+    self.__token              : str              = getenv("TOKEN")
+    if not self.__token:
+      raise Exception("No TOKEN environment variable was found.")
     self._appinfo             : AppInfo          = None
     self._guild_join_requests : List             = []
     self._intents             : Intents          = intents if intents else Intents.none()
