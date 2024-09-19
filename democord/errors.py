@@ -10,4 +10,4 @@ class MissingPermissions(Exception):
     self.missing_permissions : List[PermissionFlags] = list(missing_permissions)
 
   def __str__(self) -> str:
-    return f"You are lacking {len(self.missing_permissions):,} permission(s) to perform this action:\n{"\n".join([f"- {permission.name}" for permission in self.missing_permissions])}"
+    return ", ".join([permission.name for permission in self.missing_permissions])
