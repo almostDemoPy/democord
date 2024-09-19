@@ -171,7 +171,7 @@ class DiscordWebSocket:
     """
     payload : Payload = Payload.identify(
       token   = self.app._App__token,
-      intents = self.app.intents
+      intents = self.app.intents.value
     )
     self.send(
       payload
