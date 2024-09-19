@@ -308,6 +308,10 @@ class Guild:
       match ErrorCodes(response.get("code")):
         case ErrorCodes.MissingPermissions:
           raise MissingPermissions(PermissionFlags.manage_guild)
+    return Guild.from_data(
+      self.ws,
+      response
+    )
 
 
   @classmethod
