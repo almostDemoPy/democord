@@ -10,6 +10,13 @@ class DefaultMessageNotification(Enum):
   only_mentions = 1
 
 
+class ErrorCodes(Enum):
+  """
+  Represents an error code received from Discord
+  """
+  MissingPermissions = 50013
+
+
 class ExplicitContentFilter(Enum):
   """
   Set explicit content filter level of a guild
