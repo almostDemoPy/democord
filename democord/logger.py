@@ -6,6 +6,7 @@ from datetime  import (
                       datetime,
                       timedelta
                       )
+from os        import get_terminal_size
 from traceback import (
                       FrameSummary,
                       TracebackException
@@ -49,6 +50,7 @@ class Logger:
     self._format         : str  = time_format
     self.max_type_length : int  = 7
     self.debug_mode      : bool = debug_mode
+    self.terminal_size   : tuple[int, int] = get_terminal_size()
 
   def debug(
     self,
@@ -155,5 +157,11 @@ class Logger:
       "DEBUG"  : Fore.YELLOW
     }
     timestamp : str = datetime.now().strftime(self._format)
+    char_limit : int = (self.terminal_size.columns - len(f"\n{" " * (len(timestamp) + 13)}| "))
+    cropped   : str = "\n".join([
+      message[char_limit * (i - 1) : -1 if i == (len(message) // (char_limit)) + 2 else (char_limit * i)]
+      for i in range(1, (len(message) // char_limit) + 2)
+      if message[char_limit * (i - 1) : -1 if i == (len(message) // (char_limit)) + 2 else (char_limit * i)]
+    ])
     message   : str = message.replace("\n", f"\n{" " * (len(timestamp) + 13)}| ")
     print(f"[ {timestamp} ] {log_colors[log_type]}{"{0:>{1}}".format(log_type, self.max_type_length)}{Style.RESET_ALL} | {message}")
