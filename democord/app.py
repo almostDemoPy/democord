@@ -122,12 +122,12 @@ class App:
       raise Exception("No TOKEN environment variable was found.")
     self._appinfo             : AppInfo          = None
     self._guild_join_requests : List             = []
-    self._intents             : Intents          = intents if intents else Intents.none()
     self._presences           : List             = []
     self._private_channels    : List             = []
     self._relationships       : List             = []
     self._ws                  : DiscordWebSocket = DiscordWebSocket(self)
     self.guilds               : List[Guild]      = CallableGuilds()
+    self.intents              : Intents          = intents if intents else Intents.none()
     self.logger               : Optional[Logger] = Logger(debug_mode = debug_mode) if logger else None
     self.user                 : User             = None
 
@@ -142,18 +142,6 @@ class App:
     AppInfo
     """
     return self._appinfo
-
-
-  @property
-  def intents(self) -> int:
-    """
-    Valued intents used for the application
-
-    Returns
-    -------
-    int
-    """
-    return self._intents.value
 
 
   @property
