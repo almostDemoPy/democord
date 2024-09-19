@@ -6,6 +6,7 @@ from asyncio   import (
                       run as async_run
                       )
 from threading import Thread
+from traceback import TracebackException
 from typing    import *
 
 if TYPE_CHECKING:
@@ -62,14 +63,17 @@ class AppEvents:
     guild : Optional[Guild]
       Guild object that came with the event
     """
-    tasks = []
-    match event:
-      case GatewayEvents.Ready:
-        for callback in self.ready:
-          tasks.append(callback())
-          
-      case GatewayEvents.GuildCreate:
-        for callback in self.on_guild_available:
-          if guild not in self.app.guilds: self.app.guilds.append(guild)
-          else: tasks.append(callback(guild))
-    await gather(*tasks)
+    try:
+      tasks = []
+      match event:
+        case GatewayEvents.Ready:
+          for callback in self.ready:
+            tasks.append(callback())
+            
+        case GatewayEvents.GuildCreate:
+          for callback in self.on_guild_available:
+            if guild not in self.app.guilds: self.app.guilds.append(guild)
+            else: tasks.append(callback(guild))
+      await gather(*tasks)
+    except Exception as error:
+      if self.app.logger: self.app.logger.error(error, TracebackException.from_exception(error).stack[1])

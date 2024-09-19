@@ -5,10 +5,15 @@ from .channels import (
 from .enums    import (
                       DefaultMessageNotification,
                       ExplicitContentFilter,
+                      ErrorCodes,
                       MFALevel,
                       NSFWLevel,
+                      PermissionFlags,
                       PremiumTier,
                       VerificationLevel
+                      )
+from .errors   import (
+                      MissingPermissions
                       )
 from .file     import File
 from .flags    import (
@@ -247,63 +252,62 @@ class Guild:
     if not attributes: raise MissingArguments("Arguments are required to be filled in this method")
     data : Dict[str, Union[str, int, None]] = {}
 
-    try:
-      for attribute in attributes:
-        match attribute:
-          case "afk_channel":
-            if not isinstance(attributes[attribute], (GuildChannel, int, None)):
-              raise TypeError("Guild.afk_channel_id must either be a <GuildChannel> or <int>, or <NoneType> to remove")
-            data[attribute] : int = int(attributes[attribute])
-          
-          case "afk_timeout":
-            if not isinstance(attributes[attribute], int): raise TypeError("Guild.afk_timeout must be of type <int>")
-            if attributes[attribute] not in [60, 300, 900, 1_800, 3_600]: raise ValueError("Guild.afk_timeout must be of one of the values: 60, 300, 900, 1800, 3600")
-            data[attribute] : int = attributes[attribute]
+    for attribute in attributes:
+      match attribute:
+        case "afk_channel":
+          if not isinstance(attributes[attribute], (GuildChannel, int, None)):
+            raise TypeError("Guild.afk_channel_id must either be a <GuildChannel> or <int>, or <NoneType> to remove")
+          data[attribute] : int = int(attributes[attribute])
+        
+        case "afk_timeout":
+          if not isinstance(attributes[attribute], int): raise TypeError("Guild.afk_timeout must be of type <int>")
+          if attributes[attribute] not in [60, 300, 900, 1_800, 3_600]: raise ValueError("Guild.afk_timeout must be of one of the values: 60, 300, 900, 1800, 3600")
+          data[attribute] : int = attributes[attribute]
 
-          case "default_message_notifications":
-            if not isinstance(attributes[attribute], DefaultMessageNotification):
-              raise TypeError("Guild.default_message_notifications must be of type <DefaultMessagenotification[Enum]>")
-            data[attribute] : int = attributes[attribute].value
-          
-          case "description":
-            if not isinstance(attributes[attribute], (str, None)):
-              raise TypeError("Guild.description must be of type <str> or <NoneType>")
-            data[attribute] : str = attributes[attribute]
-          
-          case "explicit_content_filter":
-            if not isinstance(attributes[attribute], ExplicitContentFilter):
-              raise TypeError("Guild.explicit_content_filter must be of type <ExplicitContentFilter[Enum]>")
-            data[attribute] : int = attributes[attribute].value
-          
-          case "icon":
-            if not isinstance(attributes[attribute], File): raise TypeError("Guild.icon must be of type <File>")
-            if attributes[attribute].filename.endswith(".gif") and "ANIMATED_ICON" not in self.features: raise ValueError("Guild is not available for animated icons")
-            data[attribute] : int = attributes[attribute].data
+        case "default_message_notifications":
+          if not isinstance(attributes[attribute], DefaultMessageNotification):
+            raise TypeError("Guild.default_message_notifications must be of type <DefaultMessagenotification[Enum]>")
+          data[attribute] : int = attributes[attribute].value
+        
+        case "description":
+          if not isinstance(attributes[attribute], (str, None)):
+            raise TypeError("Guild.description must be of type <str> or <NoneType>")
+          data[attribute] : str = attributes[attribute]
+        
+        case "explicit_content_filter":
+          if not isinstance(attributes[attribute], ExplicitContentFilter):
+            raise TypeError("Guild.explicit_content_filter must be of type <ExplicitContentFilter[Enum]>")
+          data[attribute] : int = attributes[attribute].value
+        
+        case "icon":
+          if not isinstance(attributes[attribute], File): raise TypeError("Guild.icon must be of type <File>")
+          if attributes[attribute].filename.endswith(".gif") and "ANIMATED_ICON" not in self.features: raise ValueError("Guild is not available for animated icons")
+          data[attribute] : int = attributes[attribute].data
 
-          case "name":
-            if not isinstance(attributes[attribute], str):
-              raise TypeError("Guild.name must be of type <str>")
-            data[attribute] : str = attributes[attribute]
-          
-          case "owner":
-            if not isinstance(attributes[attribute], User): raise TypeError("Guild.owner must be of type <User>")
-            data[attribute] : int = attributes[attribute].id
+        case "name":
+          if not isinstance(attributes[attribute], str):
+            raise TypeError("Guild.name must be of type <str>")
+          data[attribute] : str = attributes[attribute]
+        
+        case "owner":
+          if not isinstance(attributes[attribute], User): raise TypeError("Guild.owner must be of type <User>")
+          data[attribute] : int = attributes[attribute].id
 
-          case "verification_level":
-            if not isinstance(attributes[attribute], VerificationLevel):
-              raise TypeError("Guild.verification_level must be of type <VerificationLevel[Enum]>")
-            data[attribute] : int = attributes[attribute].value
-
-    except Exception as error:
-      if self.ws.app.logger: return self.ws.app.logger.error(error)
+        case "verification_level":
+          if not isinstance(attributes[attribute], VerificationLevel):
+            raise TypeError("Guild.verification_level must be of type <VerificationLevel[Enum]>")
+          data[attribute] : int = attributes[attribute].value
 
     reason : str = str(attributes.get("reason"))
-
-    return self.ws.patch(
+    response : dict = self.ws.patch(
       PATCH.guild(self.id),
       data   = data,
       reason = reason
     )
+    if response.get("code"):
+      match ErrorCodes(response.get("code")):
+        case ErrorCodes.MissingPermissions:
+          raise MissingPermissions(PermissionFlags.manage_guild)
 
 
   @classmethod

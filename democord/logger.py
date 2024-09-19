@@ -1,3 +1,4 @@
+import sys
 from colorama  import (
                       Fore,
                       Style
@@ -8,7 +9,9 @@ from datetime  import (
                       )
 from os        import get_terminal_size
 from traceback import (
+                      extract_tb,
                       FrameSummary,
+                      print_exc,
                       TracebackException
                       )
 from typing    import *
@@ -74,7 +77,8 @@ class Logger:
 
   def error(
     self,
-    exception : Exception
+    exception : Exception,
+    frame     : FrameSummary = None
   ) -> None:
     """
     Sends an ERROR exception according to the exception
@@ -84,10 +88,13 @@ class Logger:
     ----------
     exception : Exception
       The exception to log
-    """
 
-    tbexc : TracebackException = TracebackException.from_exception(exception)
-    frame : FrameSummary       = tbexc.stack[0]
+    frame     : FrameSummary
+      The frame that originated the exception
+    """
+    tbexc : TracebackException = TracebackException.from_exception(exception, capture_locals = True)
+    if not frame:
+      frame : FrameSummary       = tbexc.stack[-1]
     self._log(
       log_type = "ERROR",
       message  = f"{frame.filename} - Line {frame.lineno:,}\n{frame.line}\n{tbexc.exc_type.__name__}: {tbexc}"
