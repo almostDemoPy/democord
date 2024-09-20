@@ -18,6 +18,38 @@ A Python library for the Discord API
 
 ---
 
-**Discord** : [democord](<https://discord.gg/xkYmzuwMFv>)
+## Quickstart
+```py
+from democord import App, Intents
 
-**Wiki**    : [democord Wiki](<https://github.com/almostDemoPy/democord/wiki#democord>)
+app : App = App(
+  intents = Intents.default()
+)
+
+@app.event
+async def on_ready() -> None:
+  print("bot is online")
+
+app.run()
+```
+
+---
+
+## Manuals
+Welcome to the Wiki of the democord Discord API library. The wiki showcases classes and functions that are available to you.
+
+\- [democord API Reference](https://github.com/almostDemoPy/democord/wiki/Core-API-Reference#table-of-contents)
+
+---
+
+## Sponsorships
+
+Sponsor us ( or me... ._. i'm lonely ) and help maintain the library ( and my sanity ) :
+
+- [ko-fi.com/demopy](<https://ko-fi.com/demopy>)
+
+---
+
+## Socials
+
+**Discord** : [democord](<https://discord.gg/xkYmzuwMFv>)
