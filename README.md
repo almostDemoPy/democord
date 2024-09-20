@@ -38,7 +38,7 @@ app.run()
 ## Manuals
 Welcome to the Wiki of the democord Discord API library. The wiki showcases classes and functions that are available to you.
 
-\- [democord API Reference](https://github.com/almostDemoPy/democord/wiki/Core-API-Reference#table-of-contents)
+\- [democord Core API Reference](https://github.com/almostDemoPy/democord/wiki/Core-API-Reference#table-of-contents)
 
 ---
 
