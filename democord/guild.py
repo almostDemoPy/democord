@@ -290,9 +290,10 @@ class Guild:
           data[attribute] : int = attributes[attribute].value
         
         case "icon":
-          if not isinstance(attributes[attribute], File): raise TypeError("Guild.icon must be of type <File>")
-          if attributes[attribute].filename.endswith(".gif") and "ANIMATED_ICON" not in self.features: raise ValueError("Guild is not eligible for animated icons")
-          data[attribute] : int = attributes[attribute].data
+          if not isinstance(attributes[attribute], (File, None)): raise TypeError("Guild.icon must be of type <File>")
+          if attributes[attribute]:
+            if attributes[attribute].filename.endswith(".gif") and "ANIMATED_ICON" not in self.features: raise ValueError("Guild is not eligible for animated icons")
+          data[attribute] : int = attributes[attribute].data if attributes[attribute] else None
 
         case "name":
           if not isinstance(attributes[attribute], str):
