@@ -418,5 +418,5 @@ class Guild:
         case "verification_level":            guild.__dict__[attribute] : str       = VerificationLevel(data[attribute]).name
         case _:                               guild.__dict__[attribute] : Any       = data[attribute]
         
-    guild.channels : CallableGuildChannels = CallableGuildChannels(ws, guild)
+    guild.channels : CallableGuildChannels = CallableGuildChannels()
     return guild
