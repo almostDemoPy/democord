@@ -309,6 +309,13 @@ class Guild:
             raise TypeError("Guild.system_channel must be of type <GuildChannel> or <NoneType>")
           data[attribute] : int | None = int(attributes[attribute]) if attributes[attribute] else None
 
+        case "system_channel_flags":
+          if not isinstance(attributes[attribute], List[SystemChannelFlags]):
+            raise TypeError("Guild.system_channel_flags must be a list of type <SystemChannelFlags>")
+          for flag in attributes[attribute]:
+            if isinstance(flag, SystemChannelFlags):
+              data[attribute] |= flag.value
+
         case "verification_level":
           if not isinstance(attributes[attribute], VerificationLevel):
             raise TypeError("Guild.verification_level must be of type <VerificationLevel[Enum]>")
