@@ -6,6 +6,7 @@ from .enums    import (
                       DefaultMessageNotification,
                       ExplicitContentFilter,
                       ErrorCodes,
+                      GuildFeatures,
                       MFALevel,
                       NSFWLevel,
                       PermissionFlags,
@@ -289,6 +290,17 @@ class Guild:
           if not isinstance(attributes[attribute], ExplicitContentFilter):
             raise TypeError("Guild.explicit_content_filter must be of type <ExplicitContentFilter[Enum]>")
           data[attribute] : int = attributes[attribute].value
+
+        case "features":
+          if not isinstance(attributes[attribute], list):
+            raise TypeError("Guild.features must be a list of type <str>")
+          valid_features : List[str] = [
+            feature.capitalize()
+            for feature in attributes[attribute]
+            if feature.capitalize() in GuildFeatures._value2member_map_
+          ]
+          if valid_features:
+            data[attribute] = valid_features
         
         case "icon":
           if not isinstance(attributes[attribute], (File, None)): raise TypeError("Guild.icon must be of type <File>")
