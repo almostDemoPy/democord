@@ -300,7 +300,7 @@ class Guild:
             if feature.capitalize() in GuildFeatures._value2member_map_
           ]
           if valid_features:
-            data[attribute] = valid_features
+            data[attribute] : List[str] = valid_features
         
         case "icon":
           if not isinstance(attributes[attribute], (File, None)): raise TypeError("Guild.icon must be of type <File>")
@@ -321,6 +321,11 @@ class Guild:
           if not isinstance(attributes[attribute], Locale):
             raise TypeError("Guild.preferred_locale must be of type <Locale>")
           data[attribute] : str = attributes[attribute].name
+
+        case "premium_progress_bar":
+          if not isinstance(attributes[attribute], bool):
+            raise TypeError("Guild.premium_progress_bar must be of type <bool>")
+          data[attribute] : bool = attributes[attribute]
 
         case "public_updates_channel":
           if not isinstance(attributes[attribute], (GuildChannel, None)):
