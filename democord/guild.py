@@ -19,6 +19,7 @@ from .file     import File
 from .flags    import (
                       SystemChannelFlags
                       )
+from .locales  import Locale
 from .member   import Member
 from .reqs     import (
                       GET,
@@ -303,6 +304,11 @@ class Guild:
         case "owner":
           if not isinstance(attributes[attribute], User): raise TypeError("Guild.owner must be of type <User>")
           data[attribute] : int = attributes[attribute].id
+
+        case "preferred_locale":
+          if not isinstance(attributes[attribute], Locale):
+            raise TypeError("Guild.preferred_locale must be of type <Locale>")
+          data[attribute] : str = attributes[attribute].name
 
         case "public_updates_channel":
           if not isinstance(attributes[attribute], (GuildChannel, None)):
