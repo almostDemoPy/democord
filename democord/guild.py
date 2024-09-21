@@ -264,6 +264,16 @@ class Guild:
           if attributes[attribute] not in [60, 300, 900, 1_800, 3_600]: raise ValueError("Guild.afk_timeout must be of one of the values: 60, 300, 900, 1800, 3600")
           data[attribute] : int = attributes[attribute]
 
+        case "banner":
+          if not isinstance(attributes[attribute], (File, None)):
+            raise TypeError("Guild.banner must be of type <File>")
+          if attributes[attribute]:
+            if "BANNER" not in self.features:
+              raise ValueError("Guild is not eligible for guild banners")
+            if attributes[attribute].filename.endswith(".gif") and "ANIMATED_ICON" not in self.features:
+              raise ValueError("Guild is not eligible for animated banners")
+          data[attribute] : int = attributes[attribute].data if attributes[attribute] else None
+
         case "default_message_notifications":
           if not isinstance(attributes[attribute], DefaultMessageNotification):
             raise TypeError("Guild.default_message_notifications must be of type <DefaultMessagenotification[Enum]>")
@@ -281,7 +291,7 @@ class Guild:
         
         case "icon":
           if not isinstance(attributes[attribute], File): raise TypeError("Guild.icon must be of type <File>")
-          if attributes[attribute].filename.endswith(".gif") and "ANIMATED_ICON" not in self.features: raise ValueError("Guild is not available for animated icons")
+          if attributes[attribute].filename.endswith(".gif") and "ANIMATED_ICON" not in self.features: raise ValueError("Guild is not eligible for animated icons")
           data[attribute] : int = attributes[attribute].data
 
         case "name":
