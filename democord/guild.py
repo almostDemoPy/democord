@@ -272,7 +272,7 @@ class Guild:
               raise ValueError("Guild is not eligible for guild banners")
             if attributes[attribute].filename.endswith(".gif") and "ANIMATED_ICON" not in self.features:
               raise ValueError("Guild is not eligible for animated banners")
-          data[attribute] : int = attributes[attribute].data if attributes[attribute] else None
+          data[attribute] : str = attributes[attribute].data if attributes[attribute] else None
 
         case "default_message_notifications":
           if not isinstance(attributes[attribute], DefaultMessageNotification):
