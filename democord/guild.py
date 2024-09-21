@@ -304,6 +304,11 @@ class Guild:
           if not isinstance(attributes[attribute], User): raise TypeError("Guild.owner must be of type <User>")
           data[attribute] : int = attributes[attribute].id
 
+        case "public_updates_channel":
+          if not isinstance(attributes[attribute], (GuildChannel, None)):
+            raise TypeError("Guild.public_updates_channel must be of type <GuildChannel> or <NoneType>")
+          data[attribute] : int | None = int(attributes[attribute]) if attributes[attribute] else None
+
         case "rules_channel":
           if not isinstance(attributes[attribute], (GuildChannel, None)):
             raise TypeError("Guild.rules_channel must be of type <GuildChannel> or <NoneType>")
