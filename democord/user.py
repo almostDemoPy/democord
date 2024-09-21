@@ -90,12 +90,12 @@ class User:
           user.__dict__[attribute] : str = CallableAvatar(f"https://cdn.discordapp.com/avatars/{data["id"]}/{data["avatar"]}.{"gif" if data["avatar"].startswith("a_") else "png"}") if data[attribute] else ""
           user.default_avatar      : str = f"https://cdn.discordapp.com/embed/avatars/{(int(data["id"]) >> 22) % 6 if int(data["discriminator"]) == 0 else int(data["discriminator"]) % 5}.png"
           user.avatar_decoration   : str = f"https://cdn.discordapp.com/avatar-decoration-presets/{data["avatar_decoration_data"]["asset"]}.png" if data.get("avatar_decoration_data") else ""
-        case "accent_color": user.__dict__[attribute] : Color       = Color.from_int(data[attribute])
-        case "locale":       user.__dict__[attribute] : Locale      = Locale._value2member_map_[data[attribute]]
-        case "flags":        user.__dict__[attribute] : List[str]   = [name for name, flag in UserFlags._member_map_.items() if (data[attribute] & flag.value) == flag.value]
-        case "public_flags": user.__dict__[attribute] : List[str]   = [name for name, flag in UserFlags._member_map_.items() if (data[attribute] & flag.value) == flag.value]
-        case "premium_type": user.__dict__[attribute] : PremiumType = PremiumType._value2member_map_[data[attribute]]
-        case _:              user.__dict__[attribute] : Any         = data[attribute]
+        case "accent_color": user.__dict__[attribute]     : Color       = Color.from_int(data[attribute])
+        case "locale":       user.__dict__[attribute]     : Locale      = Locale._value2member_map_[data[attribute]]
+        case "flags":        user.__dict__[attribute]     : List[str]   = [name for name, flag in UserFlags._member_map_.items() if (data[attribute] & flag.value) == flag.value]
+        case "public_flags": user.__dict__["user_flags"]  : List[str]   = [name for name, flag in UserFlags._member_map_.items() if (data[attribute] & flag.value) == flag.value]
+        case "premium_type": user.__dict__[attribute]     : PremiumType = PremiumType._value2member_map_[data[attribute]]
+        case _:              user.__dict__[attribute]     : Any         = data[attribute]
     return user
 
 
