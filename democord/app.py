@@ -163,21 +163,10 @@ class App:
     self.ws.connect()
 
 
-  def event(
-    self,
-    function : Coroutine
-  ) -> None:
-    """
-    Register a function as an event listener for the application. This is typically used as a decorator
-
-    Parameters
-    ----------
-    function : Coroutine
-      The function to append as an event listener
-    """
-    match function.__name__:
-      case "on_ready"          : self.__app_events.add(function)
-      case "on_guild_available": self.__app_events.add(function)
+  def listen(self, event_name = None) -> Callable:
+    def wrapper(function : Callable) -> None:
+      self.__app_events.add(event_name or function.__name__, function)
+    return wrapper
 
 
   async def fetch_guild(

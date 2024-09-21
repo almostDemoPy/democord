@@ -29,6 +29,7 @@ class AppEvents:
 
   def add(
     self,
+    name     : str,
     callback : Coroutine
   ) -> None:
     """
@@ -40,10 +41,9 @@ class AppEvents:
     callback : Coroutine
       Function callback coroutine of the event listener
     """
-    match callback.__name__:
+    match name:
       case "on_ready":           self.ready.append(callback)
       case "on_guild_available": self.on_guild_available.append(callback)
-
 
   async def call(
     self,
