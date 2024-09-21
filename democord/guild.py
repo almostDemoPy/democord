@@ -256,7 +256,7 @@ class Guild:
       match attribute:
         case "afk_channel":
           if not isinstance(attributes[attribute], (GuildChannel, int, None)):
-            raise TypeError("Guild.afk_channel_id must either be a <GuildChannel> or <int>, or <NoneType> to remove")
+            raise TypeError("Guild.afk_channel must either be a <GuildChannel> or <int>, or <NoneType> to remove")
           data[attribute] : int = int(attributes[attribute])
         
         case "afk_timeout":
