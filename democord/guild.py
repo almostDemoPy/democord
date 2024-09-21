@@ -14,6 +14,7 @@ from .enums    import (
                       VerificationLevel
                       )
 from .errors   import (
+                      BotMissingPermissions,
                       MissingPermissions
                       )
 from .file     import File
@@ -368,7 +369,7 @@ class Guild:
     if response.get("code"):
       match ErrorCodes(response.get("code")):
         case ErrorCodes.MissingPermissions:
-          raise MissingPermissions(PermissionFlags.manage_guild)
+          raise BotMissingPermissions(PermissionFlags.manage_guild)
     return Guild.from_data(
       self.ws,
       response
