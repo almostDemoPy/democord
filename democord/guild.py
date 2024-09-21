@@ -337,6 +337,11 @@ class Guild:
             raise TypeError("Guild.rules_channel must be of type <GuildChannel> or <NoneType>")
           data[attribute] : int | None = int(attributes[attribute]) if attributes[attribute] else None
 
+        case "safety_alerts_channel":
+          if not isinstance(attributes[attribute], (GuildChannel, None)):
+            raise TypeError("Guild.safety_alerts_channel must be of type <GuildChannel> or <NoneType>")
+          data[attribute] : int | None = int(attributes[attribute]) if attributes[attribute] else None
+
         case "system_channel":
           if not isinstance(attributes[attribute], (GuildChannel, None)):
             raise TypeError("Guild.system_channel must be of type <GuildChannel> or <NoneType>")
