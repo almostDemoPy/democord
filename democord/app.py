@@ -189,10 +189,14 @@ class App:
       }
       for attribute in attributes:
         match attribute:
+          case "afk_channel":
+            if not isinstance(attributes[attribute], GuildChannel):
+              raise TypeError("Guild.afk_channel must be of type <GuildChannel>")
+            data[attribute] : int = int(GuildChannel)
           case "channels":
             if not isinstance(attributes[attribute], list) and not all(isinstance(channel, GuildChannel) for channel in attributes[attribute]):
               raise TypeError("Guild.channels must be a list of type <GuildChannel>")
-            data[attributes] : List[Dict[str, Any]] = [
+            data[attribute] : List[Dict[str, Any]] = [
               channel.data
               for channel in attributes[attribute]
             ]
