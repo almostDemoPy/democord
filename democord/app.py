@@ -1,6 +1,7 @@
 from .appinfo  import AppInfo
 from .enums    import (
                       DefaultMessageNotifications,
+                      ExplicitContentFilter,
                       VerificationLevel
                       )
 from .events   import AppEvents
@@ -187,6 +188,10 @@ class App:
           case "default_message_notifications":
             if not isinstance(attributes[attribute], DefaultMessageNotifications):
               raise TypeError("Guild.default_message_notifications must be of type <DefaultMessageNotifications>")
+            data[attribute] : int = attributes[attribute].value
+          case "explicit_content_filter":
+            if not isinstance(attributes[attribute], ExplicitContentFilter):
+              raise TypeError("Guild.explicit_content_filter must be of type <ExplicitContentFilter>")
             data[attribute] : int = attributes[attribute].value
           case "icon":
             if not isinstance(attributes[attribute], File):
