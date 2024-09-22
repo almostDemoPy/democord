@@ -169,6 +169,25 @@ class App:
     return wrapper
 
 
+  async def create_guild(
+    self,
+    name : str,
+    **attributes
+  ) -> Guild:
+    try:
+      data : Dict[str, Any] = {
+        "name": name
+      }
+      for attribute in attributes:
+        match attribute:
+          case "icon":
+            if not isinstance(attributes[attribute], File):
+              raise TypeError("Guild.icon must be of type <File>")
+            data[attribute] : str = attributes[attribute].data
+    except Exception as error:
+      if self.logger: self.logger.error(error)
+
+
   async def fetch_guild(
     self,
     guild_id    : int,
