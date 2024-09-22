@@ -193,6 +193,12 @@ class App:
             if not isinstance(attributes[attribute], GuildChannel):
               raise TypeError("Guild.afk_channel must be of type <GuildChannel>")
             data[attribute] : int = int(GuildChannel)
+          case "afk_timeout":
+            if not isinstance(attributes[attribute], int):
+              raise TypeError("Guild.afk_timeout must be of type <int>")
+            if attributes[attribute] not in [60, 300, 900, 1_800, 3_600]:
+              raise ValueError("Guild.afk_timeout must be of either values: 60, 300, 900, 1800, 3600")
+            data[attribute] : int = attributes[attribute]
           case "channels":
             if not isinstance(attributes[attribute], list) and not all(isinstance(channel, GuildChannel) for channel in attributes[attribute]):
               raise TypeError("Guild.channels must be a list of type <GuildChannel>")
