@@ -6,6 +6,7 @@ from .enums    import (
                       VerificationLevel
                       )
 from .events   import AppEvents
+from .flags    import SystemChannelFlags
 from .guild    import Guild
 from .intents  import Intents
 from .logger   import Logger
@@ -229,6 +230,11 @@ class App:
             if not isinstance(attributes[attribute], GuildChannel):
               raise TypeError("Guild.system_channel must be of type <GuildChannel>")
             data[attribute] : int = int(attributes[attribute])
+          case "system_channel_flags":
+            if not isinstance(attributes[attribute], list) and not all(isinstance(flag, SystemChannelFlags) for flag in attributes[attribute]):
+              raise TypeError("Guild.system_channel_flags must be a list of type <SystemChannelFlags>")
+            for flag in attributes[attribute]:
+              data[attribute] |= flag.value
           case "verification_level":
             if not isinstance(attributes[attribute], VerificationLevel):
               raise TypeError("Guild.verification_level must be of type <VerificationLevel>")
