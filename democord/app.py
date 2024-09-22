@@ -5,6 +5,7 @@ from .enums    import (
                       ExplicitContentFilter,
                       VerificationLevel
                       )
+from .errors   import APILimit
 from .events   import AppEvents
 from .flags    import SystemChannelFlags
 from .guild    import Guild
@@ -183,6 +184,8 @@ class App:
     **attributes
   ) -> Guild:
     try:
+      if len(self.guilds) >= 10:
+        raise APILimit("Bot can only create guilds when in less than 10 guilds.")
       if len(name) < 2 or len(name) > 100:
         raise ValueError("Guild.name length must be between 2 and 100")
       data : Dict[str, Any] = {
