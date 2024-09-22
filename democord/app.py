@@ -225,6 +225,10 @@ class App:
               role.data
               for role in attributes[attribute]
             ]
+          case "system_channel":
+            if not isinstance(attributes[attribute], GuildChannel):
+              raise TypeError("Guild.system_channel must be of type <GuildChannel>")
+            data[attribute] : int = int(attributes[attribute])
           case "verification_level":
             if not isinstance(attributes[attribute], VerificationLevel):
               raise TypeError("Guild.verification_level must be of type <VerificationLevel>")
