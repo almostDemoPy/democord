@@ -1,4 +1,5 @@
 from .appinfo  import AppInfo
+from .channels import GuildChannel
 from .enums    import (
                       DefaultMessageNotifications,
                       ExplicitContentFilter,
@@ -188,6 +189,13 @@ class App:
       }
       for attribute in attributes:
         match attribute:
+          case "channels":
+            if not isinstance(attributes[attribute], list) and not all(isinstance(channel, GuildChannel) for channel in attributes[attribute]):
+              raise TypeError("Guild.channels must be a list of type <GuildChannel>")
+            data[attributes] : List[Dict[str, Any]] = [
+              channel.data
+              for channel in attributes[attribute]
+            ]
           case "default_message_notifications":
             if not isinstance(attributes[attribute], DefaultMessageNotifications):
               raise TypeError("Guild.default_message_notifications must be of type <DefaultMessageNotifications>")
@@ -203,8 +211,8 @@ class App:
           case "roles":
             if not isinstance(attributes[attribute], list) and not all(isinstance(role, Role) for role in attributes[attribute]):
               raise TypeError("Guild.roles must be a list of type <Role>")
-            data[attribute] : List[Role] = [
-              role.to_json()
+            data[attribute] : List[Dict[str, Any]] = [
+              role.data
               for role in attributes[attribute]
             ]
           case "verification_level":
