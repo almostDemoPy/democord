@@ -42,6 +42,12 @@ Welcome to the Wiki of the democord Discord API library. The wiki showcases clas
 
 ---
 
+## Frequently Asked Questions
+The [FAQ](https://github.com/almostDemoPy/democord/wiki/FAQ#faq---frequently-asked-questions) enlists the usually asked questions and queries of the community, namely:
+- [Where do I pass my bot's token and how ?](https://github.com/almostDemoPy/democord/wiki/FAQ#where-do-i-pass-my-bots-token-and-how-)
+
+---
+
 ## Sponsorships
 
 Sponsor us ( or me... ._. i'm lonely ) and help maintain the library ( and my sanity ) :
