@@ -106,7 +106,7 @@ class DiscordWebSocket:
     self,
     endpoint : str,
     data     : Dict[str, Any],
-    reason   : Optional[str]
+    reason   : Optional[str] = None
   ) -> Dict[str, Any]:
     """
     Utilizes the PATCH API method with an endpoint call
@@ -134,6 +134,22 @@ class DiscordWebSocket:
           "Authorization"     : f"Bot {self.app._App__token}",
           "Content-Type"      : "application/json",
           "X-Audit-Log-Reason": reason
+        },
+        data    = dumps(data)
+      ).content
+    )
+
+  def post(
+    self,
+    endpoint : str,
+    data     : Dict[str, Any]
+  ) -> Dict[str, Any]:
+    return loads(
+      requests.post(
+        f"{self.api}{endpoint}",
+        headers = {
+          "Authorization" : f"Bot {self.app._App__token}",
+          "Content-Type"  : "application/json"
         },
         data    = dumps(data)
       ).content
