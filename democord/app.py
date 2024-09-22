@@ -10,7 +10,7 @@ from .flags    import SystemChannelFlags
 from .guild    import Guild
 from .intents  import Intents
 from .logger   import Logger
-from .reqs     import GET
+from .reqs     import GET, POST
 from .role     import Role
 from .user     import User
 from .ws       import DiscordWebSocket
@@ -239,6 +239,11 @@ class App:
             if not isinstance(attributes[attribute], VerificationLevel):
               raise TypeError("Guild.verification_level must be of type <VerificationLevel>")
             data[attribute] : int = attributes[attribute].value
+      response : Dict[str, Any] = self.ws.post(
+        POST.guilds,
+        data = data
+      )
+      return Guild.from_data(self.ws, response)
     except Exception as error:
       if self.logger: self.logger.error(error)
 
