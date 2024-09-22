@@ -2,6 +2,8 @@ from .enums import PermissionFlags
 from typing import *
 
 
+class APILimit(Exception): ...
+
 class BotMissingPermissions(Exception):
   def __init__(
     self,
