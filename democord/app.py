@@ -180,6 +180,8 @@ class App:
     **attributes
   ) -> Guild:
     try:
+      if len(name) < 2 or len(name) > 100:
+        raise ValueError("Guild.name length must be between 2 and 100")
       data : Dict[str, Any] = {
         "name": name
       }
