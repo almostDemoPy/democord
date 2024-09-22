@@ -9,6 +9,7 @@ from .guild    import Guild
 from .intents  import Intents
 from .logger   import Logger
 from .reqs     import GET
+from .role     import Role
 from .user     import User
 from .ws       import DiscordWebSocket
 from dotenv    import load_dotenv
@@ -199,6 +200,13 @@ class App:
             if not isinstance(attributes[attribute], File):
               raise TypeError("Guild.icon must be of type <File>")
             data[attribute] : str = attributes[attribute].data
+          case "roles":
+            if not isinstance(attributes[attribute], list) and not all(isinstance(role, Role) for role in attributes[attribute]):
+              raise TypeError("Guild.roles must be a list of type <Role>")
+            data[attribute] : List[Role] = [
+              role.to_json()
+              for role in attributes[attribute]
+            ]
           case "verification_level":
             if not isinstance(attributes[attribute], VerificationLevel):
               raise TypeError("Guild.verification_level must be of type <VerificationLevel>")
