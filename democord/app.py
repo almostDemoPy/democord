@@ -1,4 +1,7 @@
 from .appinfo  import AppInfo
+from .enums    import (
+                      VerificationLevel
+                      )
 from .events   import AppEvents
 from .guild    import Guild
 from .intents  import Intents
@@ -184,6 +187,10 @@ class App:
             if not isinstance(attributes[attribute], File):
               raise TypeError("Guild.icon must be of type <File>")
             data[attribute] : str = attributes[attribute].data
+          case "verification_level":
+            if not isinstance(attributes[attribute], VerificationLevel):
+              raise TypeError("Guild.verification_level must be of type <VerificationLevel>")
+            data[attribute] : int = attributes[attribute].value
     except Exception as error:
       if self.logger: self.logger.error(error)
 
