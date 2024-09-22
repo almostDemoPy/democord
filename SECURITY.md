@@ -8,4 +8,4 @@
 
 ## Reporting a Vulnerability
 
-Submit a ` Vulnerability Report ` document issue. If urgent, contact me, or a contributor / collaborator, privately in Discord: ` @demoutrei `
+Submit a [` Vulnerability Report `](https://github.com/almostDemoPy/democord/security/advisories/new) document issue. If urgent, contact me, or a contributor / collaborator, privately in Discord: ` @demoutrei `
