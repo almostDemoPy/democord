@@ -1,5 +1,6 @@
 from .appinfo  import AppInfo
 from .enums    import (
+                      DefaultMessageNotifications,
                       VerificationLevel
                       )
 from .events   import AppEvents
@@ -183,6 +184,10 @@ class App:
       }
       for attribute in attributes:
         match attribute:
+          case "default_message_notifications":
+            if not isinstance(attributes[attribute], DefaultMessageNotifications):
+              raise TypeError("Guild.default_message_notifications must be of type <DefaultMessageNotifications>")
+            data[attribute] : int = attributes[attribute].value
           case "icon":
             if not isinstance(attributes[attribute], File):
               raise TypeError("Guild.icon must be of type <File>")
