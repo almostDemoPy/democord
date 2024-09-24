@@ -1,7 +1,7 @@
 from .appinfo  import AppInfo
 from .channels import GuildChannel
 from .enums    import (
-                      DefaultMessageNotifications,
+                      DefaultMessageNotification,
                       ExplicitContentFilter,
                       VerificationLevel
                       )

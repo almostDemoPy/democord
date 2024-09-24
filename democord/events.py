@@ -72,8 +72,9 @@ class AppEvents:
             
         case GatewayEvents.GuildCreate:
           for callback in self.on_guild_available:
-            if guild not in self.app.guilds: self.app.guilds.append(guild)
+            if not self.app.guilds(id = guild.id): self.app.guilds.append(guild)
             else: tasks.append(callback(guild))
       await gather(*tasks)
     except Exception as error:
-      if self.app.logger: self.app.logger.error(error, TracebackException.from_exception(error).stack[1])
+      tbexc : TracebackException = TracebackException.from_exception(error)
+      if self.app.logger: self.app.logger.error(error, tbexc.stack[1] if len(tbexc.stack) > 1 else tbexc.stack[0])
