@@ -377,6 +377,10 @@ class Guild:
     )
 
 
+  async def preview(self) -> GuildPreview:
+    return GuildPreview.from_data(self.ws.get(GET.guild_preview(self.id)))
+
+
   @classmethod
   def from_data(
     cls,
