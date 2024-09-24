@@ -77,6 +77,20 @@ class DiscordWebSocket:
     self.__session_id         : str           = None
 
 
+  def delete(
+    self,
+    endpoint : str
+  ) -> Dict[str, Any]:
+    return loads(
+      requests.delete(
+        f"{self.api}{endpoint}",
+        headers = {
+          "Authorization": f"Bot {self.app._App__token}"
+        }
+      ).content
+    )
+
+
   def get(
     self,
     endpoint : str
