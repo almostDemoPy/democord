@@ -25,6 +25,7 @@ from .flags    import (
 from .locales  import Locale
 from .member   import Member
 from .reqs     import (
+                      DELETE,
                       GET,
                       PATCH
                       )
@@ -215,6 +216,17 @@ class Guild:
     return self.name
 
 
+  async def delete(self) -> None:
+    try:
+      if self.id != self.ws.app.appinfo.id:
+        raise BotMissingPermissions("Bot must be the guild owner in order to delete the guild.")
+      self.ws.delete(DELETE.guild(self.id))
+      self.ws.app.guilds.remove(self.ws.app.guilds(id = self.id)[0])
+      return None
+    except Exception as error:
+      if self.ws.app.logger: self.ws.app.logger.error(error)
+
+
   async def edit(
     self,
     **attributes
@@ -378,7 +390,10 @@ class Guild:
 
 
   async def preview(self) -> GuildPreview:
-    return GuildPreview.from_data(self.ws.get(GET.guild_preview(self.id)))
+    try:
+      return GuildPreview.from_data(self.ws.get(GET.guild_preview(self.id)))
+    except Exception as error:
+      if self.ws.app.logger: self.ws.app.logger.error(error)
 
 
   @classmethod
