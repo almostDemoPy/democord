@@ -2,6 +2,7 @@ from .asset    import Asset
 from .channels import (
                       GuildChannel
                       )
+from .emoji    import Emoji
 from .enums    import (
                       DefaultMessageNotification,
                       ExplicitContentFilter,
@@ -420,3 +421,22 @@ class Guild:
         
     guild.channels : CallableGuildChannels = CallableGuildChannels()
     return guild
+
+
+class GuildPreview:
+
+  @classmethod
+  def from_data(cls, data : Dict[str, Any]) -> Self:
+    preview : Self = cls()
+    for attribute in data:
+      match attribute:
+        case "id": preview.id : int = data[attribute]
+        case "name": preview.name : str = data[attribute]
+        case "icon" | "splash" | "discovery_splash": preview.icon : Asset = Asset.from_guild(attribute, data)
+        case "emojis": preview.emojis : List[Emoji] = [Emoji.from_data(emoji) for emoji in data[attribute]]
+        case "features": preview.features : List[str] = data[attribute]
+        case "approximate_member_count": preview.approximate_member_count : int = data[attribute]
+        case "approximate_presence_count": preview.approximate_presence_count : int = data[attribute]
+        case "description": preview.description : str = data[attribute]
+        case "stickers": preview.stickers : List[Sticker] = [Sticker.from_data(sticker) for sticker in data[attribute]]
+    return preview
