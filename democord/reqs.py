@@ -17,6 +17,7 @@ class GET(Enum):
   gateway        : str = "/gateway"
   guild          : str = lambda guild_id, with_counts: f"/guilds/{guild_id}?with_counts={with_counts}"
   guild_channels : str = lambda guild_id             : f"/guilds/{guild_id}/channels"
+  guild_preview  : str = lambda guild_id             : f"/guilds/{guild_id}/preview"
 
 class PATCH(Enum):
   """
