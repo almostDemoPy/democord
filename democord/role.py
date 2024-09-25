@@ -1,0 +1,1 @@
+class Role: pass

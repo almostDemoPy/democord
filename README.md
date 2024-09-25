@@ -26,7 +26,7 @@ app : App = App(
   intents = Intents.default()
 )
 
-@app.event
+@app.listen()
 async def on_ready() -> None:
   print("bot is online")
 

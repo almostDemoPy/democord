@@ -1,7 +1,11 @@
-from enum import Enum
+from enum   import Enum
+from typing import *
 
 
 class ApplicationFlags(Enum):
+  """
+  Enumerates an application's possible flags
+  """
   application_command_badge = 1 << 23
   automod                   = 1 << 6
   embedded                  = 1 << 17
@@ -14,7 +18,22 @@ class ApplicationFlags(Enum):
   presence_limited          = 1 << 13
 
 
+class SystemChannelFlags(Enum):
+  """
+  Enumerates a system channel's flags
+  """
+  suppress_join_notifications                              = 1 << 0
+  suppress_premium_subscriptions                           = 1 << 1
+  suppress_guild_reminder_notifications                    = 1 << 2
+  suppress_join_notification_replies                       = 1 << 3
+  suppress_role_subscription_purchase_notifications        = 1 << 4
+  suppress_role_subscription_purchase_notification_replies = 1 << 5
+
+
 class UserFlags(Enum):
+  """
+  Enumerates a user's possible flags
+  """
   staff                = 1 << 0
   partner              = 1 << 1
   hypesquad_events     = 1 << 2
@@ -30,12 +49,3 @@ class UserFlags(Enum):
   certified_moderator  = 1 << 18
   http_bot             = 1 << 19
   active_developer     = 1 << 22
-
-
-class SystemChannelFlags(Enum):
-  suppress_join_notifications = 1 << 0
-  suppress_premium_subscriptions = 1 << 1
-  suppress_guild_reminder_notifications = 1 << 2
-  suppress_join_notification_replies = 1 << 3
-  suppress_role_subscription_purchase_notifications = 1 << 4
-  suppress_role_subscription_purchase_notification_replies = 1 << 5
