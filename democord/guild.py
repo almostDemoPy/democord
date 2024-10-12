@@ -1,6 +1,7 @@
 from .asset    import Asset
 from .channels import (
-                      GuildChannel
+                      GuildChannel,
+                      TextChannel
                       )
 from .emoji    import Emoji
 from .enums    import (
