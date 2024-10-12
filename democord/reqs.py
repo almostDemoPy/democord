@@ -18,6 +18,7 @@ class GET(Enum):
   guild          : str = lambda guild_id, with_counts: f"/guilds/{guild_id}?with_counts={with_counts}"
   guild_channels : str = lambda guild_id             : f"/guilds/{guild_id}/channels"
   guild_preview  : str = lambda guild_id             : f"/guilds/{guild_id}/preview"
+  member         : str = lambda guild_id, member_id  : f"/guilds/{guild_id}/members/{member_id}"
 
 class PATCH(Enum):
   """
