@@ -1,7 +1,8 @@
 from .asset    import Asset
 from .channels import (
                       GuildChannel,
-                      TextChannel
+                      TextChannel,
+                      Thread
                       )
 from .emoji    import Emoji
 from .enums    import (
@@ -236,6 +237,14 @@ class Guild:
     """
 
     return self.name
+
+
+  async def active_threads(self) -> List[Thread]:
+    try:
+      response : Dict[str, Any] = self.ws.get(GET.active_threads(self.id))
+      print(response)
+    except Exception as error:
+      if self.ws.app.logger: self.ws.app.logger.error(error)
 
 
   async def create_text(
