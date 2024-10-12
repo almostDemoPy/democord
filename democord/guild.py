@@ -419,6 +419,22 @@ class Guild:
       if self.ws.app.logger: self.ws.app.logger.error(error)
 
 
+  async def fetch_members(
+    self,
+    limit : Optional[int] = 1_000,
+    after : Optional[int] = 0
+  ) -> List[Member]:
+    try:
+      if not isinstance(limit, int): raise TypeError("limit: must be of type <int>")
+      if limit < 0 or limit > 1_000: raise ValueError("limit: must be between 0 and 1,000")
+      if not isinstance(after, int): raise TypeError("after: must be of type <int>")
+      if after < 0: raise ValueError("after: must be 0 or greater")
+      response : Dict[str, Any] = self.ws.get(GET.members(self.id, limit, after))
+      return [Member.from_data(data) for data in response]
+    except Exception as error:
+      if self.ws.app.logger: self.ws.app.logger.error(error)
+
+
   async def preview(self) -> GuildPreview:
     try:
       return GuildPreview.from_data(self.ws.get(GET.guild_preview(self.id)))
