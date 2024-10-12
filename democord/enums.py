@@ -2,6 +2,22 @@ from enum   import Enum
 from typing import *
 
 
+class ChannelType(Enum):
+  text                =  0
+  dm                  =  1
+  voice               =  2
+  group_dm            =  3
+  category            =  4
+  announcement        =  5
+  announcement_thread = 10
+  public_thread       = 11
+  private_thread      = 12
+  stage               = 13
+  directory           = 14
+  forum               = 14
+  media               = 16
+
+
 class DefaultMessageNotification(Enum):
   """
   Set default message notification level of a guild
