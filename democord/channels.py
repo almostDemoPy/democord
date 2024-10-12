@@ -7,3 +7,6 @@ class GuildChannel:
   """
 
   pass
+
+
+class TextChannel(GuildChannel): pass
