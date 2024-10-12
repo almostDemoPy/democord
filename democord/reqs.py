@@ -14,6 +14,7 @@ class GET(Enum):
   Utilizes the GET API method
   """
 
+  active_threads : str = lambda guild_id: f"/guilds{guild_id}/threads/active"
   gateway        : str = "/gateway"
   guild          : str = lambda guild_id, with_counts: f"/guilds/{guild_id}?with_counts={with_counts}"
   guild_channels : str = lambda guild_id             : f"/guilds/{guild_id}/channels"
