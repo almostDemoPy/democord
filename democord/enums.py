@@ -30,7 +30,7 @@ class ErrorCodes(Enum):
   """
   Represents an error code received from Discord
   """
-  MissingPermissions = 50013
+  BotMissingPermissions = 50013
 
 
 class ExplicitContentFilter(Enum):
