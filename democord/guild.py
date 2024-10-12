@@ -408,6 +408,17 @@ class Guild:
     )
 
 
+  async def fetch_member(
+    self,
+    member_id : int
+  ) -> Member:
+    try:
+      response : Dict[str, Any] = self.ws.get(GET.member(self.id, member_id))
+      return Member.from_data(self.ws, response)
+    except Exception as error:
+      if self.ws.app.logger: self.ws.app.logger.error(error)
+
+
   async def preview(self) -> GuildPreview:
     try:
       return GuildPreview.from_data(self.ws.get(GET.guild_preview(self.id)))
