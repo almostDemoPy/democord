@@ -156,14 +156,16 @@ class DiscordWebSocket:
   def post(
     self,
     endpoint : str,
-    data     : Dict[str, Any]
+    data     : Dict[str, Any],
+    reason   : Optional[str] = None
   ) -> Dict[str, Any]:
     return loads(
       requests.post(
         f"{self.api}{endpoint}",
         headers = {
-          "Authorization" : f"Bot {self.app._App__token}",
-          "Content-Type"  : "application/json"
+          "Authorization"      : f"Bot {self.app._App__token}",
+          "Content-Type"       : "application/json",
+          "X-Audit-Log-Reason" : reason
         },
         data    = dumps(data)
       ).content
