@@ -4,6 +4,7 @@ from .channels import (
                       )
 from .emoji    import Emoji
 from .enums    import (
+                      ChannelType,
                       DefaultMessageNotification,
                       ExplicitContentFilter,
                       ErrorCodes,
@@ -27,7 +28,8 @@ from .member   import Member
 from .reqs     import (
                       DELETE,
                       GET,
-                      PATCH
+                      PATCH,
+                      POST
                       )
 from .user     import User
 from typing    import *
@@ -235,6 +237,57 @@ class Guild:
     return self.name
 
 
+  async def create_text(
+    self,
+    name : str,
+    *,
+    auto_archive_duration : Optional[int] = 0,
+    nsfw : Optional[bool] = False,
+    overwrites : Optional[PermissionOverwrites] = None,
+    parent : Optional[Union[CategoryChannel, int]] = None,
+    position : Optional[int] = 0,
+    reason : Optional[str] = None,
+    slowmode : Optional[int] = 0,
+    thread_slowmode : Optional[int] = 0,
+    topic : Optional[str] = None
+  ) -> TextChannel:
+    try:
+      if not isinstance(auto_archive_duration, int): raise TypeError("TextChannel.auto_archive_duration must be of type <int>")
+      if not isinstance(name, str): raise TypeError("TextChannel.name must be of type <str>")
+      if len(name) < 1 or len(name) > 100: raise ValueError("TextChannel.name must be between 1 and 100 characters")
+      if not isinstance(nsfw, bool): raise TypeError("TextChannel.nsfw must be of type <bool>")
+      if not isinstance(overwrites, PermissionOverwrites): raise TypeError("TextChannel.permission_overwrites must be of type <PermissionOverwrites>")
+      if not isinstance(parent, (CategoryChannel, int)): raise TypeError("TextChannel.parent must be of type <CategoryChannel> or <int>")
+      if not isinstance(position, int): raise TypeError("TextChannel.position must be of type <int>")
+      if position < 0: raise ValueError("TextChannel.position must be a positive integer")
+      if not isinstance(slowmode, int): raise TypeError("TextChannel.slowmode must be of type <int>")
+      if slowmode < 0 or slowmode > 21_600: raise ValueError("TextChannel.slowmode must be between 0 and 21,600 seconds")
+      if not isinstance(thread_slowmode, int): raise TypeError("TextChannel.thread_slowmode must be of type <int>")
+      if thread_slowmode < 0 or thread_slowmode > 21_600: raise ValueError("TextChannel.thread_slowmode must be between 0 and 21,600 seconds")
+      if not isinstance(topic, str): raise TypeError("TextChannel.topic must be of type <str>")
+      if len(topic) > 1_024: raise ValueError("TextChannel.topic must be between 0 and 100 characters")
+      data : Dict[str, [str, int]] = {
+        "default_auto_archive_duration": auto_archive_duration,
+        "default_thread_rate_limit_per_user": thread_slowmode,
+        "name": name,
+        "nsfw": nsfw,
+        "parent_id": int(parent),
+        "permission_overwrites": overwrites.data,
+        "position": position,
+        "rate_limit_per_user": slowmode,
+        "type": ChannelType.text.value,
+        "topic": topic
+      }
+      response : Dict[str, Any] = self.ws.post(POST.guild_channel, data = data)
+      if response.get("code"):
+        match ErrorCodes(response.get("code")):
+          case ErrorCodes.BotMissingPermissions:
+            raise BotMissingPermissions(PermissionFlags.manage_channels)
+      return TextChannel.from_data(self.ws, response, reason = reason)
+    except Exception as error:
+      if self.ws.app.logger: self.ws.app.logger.error(error)
+
+
   async def delete(self) -> None:
     try:
       if self.id != self.ws.app.appinfo.id:
@@ -400,7 +453,7 @@ class Guild:
     )
     if response.get("code"):
       match ErrorCodes(response.get("code")):
-        case ErrorCodes.MissingPermissions:
+        case ErrorCodes.BotMissingPermissions:
           raise BotMissingPermissions(PermissionFlags.manage_guild)
     return Guild.from_data(
       self.ws,
