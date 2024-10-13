@@ -100,6 +100,15 @@ class Member:
     except Exception as error:
       if self.ws.app.logger: self.ws.app.logger.error(error)
 
+  async def kick(
+    self,
+    reason : Optional[str] = None
+  ) -> None:
+    try:
+      await self.guild.kick(self.id, reason = reason)
+    except Exception as error:
+      if self.ws.app.logger: self.ws.app.logger.error(error)
+
   async def remove_roles(
     self,
     *roles : Role,
