@@ -1,7 +1,10 @@
 from .enums  import (
-                   PermissionFlags
-                   )
+                    PermissionFlags
+                    )
 from typing import *
 
 
 class Permissions: pass
+
+
+class PermissionOverwrites: pass
