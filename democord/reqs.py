@@ -27,6 +27,7 @@ class PATCH(Enum):
   """
 
   guild : str = lambda guild_id: f"/guilds/{guild_id}"
+  member : str = lambda guild_id, member_id : f"/guilds/{guild_id}/members/{member_id}"
 
 class POST(Enum):
   guild : str = "/guilds"
