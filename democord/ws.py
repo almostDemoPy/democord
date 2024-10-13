@@ -169,6 +169,23 @@ class DiscordWebSocket:
       ).content
     )
 
+  
+  def put(
+    self,
+    endpoint : str,
+    data     : Dict[str, Any]
+  ) -> Dict[str, Any]:
+    return loads(
+      requests.put(
+        f"{self.api}{endpoint}",
+        headers = {
+          "Authorization" : f"Bot {self.app._App__token}",
+          "Content-Type"  : "application/json"
+        },
+        data = dumps(data)
+      ).content
+    )
+
 
   def send(
     self,
