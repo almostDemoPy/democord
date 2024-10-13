@@ -79,13 +79,15 @@ class DiscordWebSocket:
 
   def delete(
     self,
-    endpoint : str
+    endpoint : str,
+    reason : Optional[str] = None
   ) -> Dict[str, Any]:
     return loads(
       requests.delete(
         f"{self.api}{endpoint}",
         headers = {
-          "Authorization": f"Bot {self.app._App__token}"
+          "Authorization": f"Bot {self.app._App__token}",
+          "X-Audit-Log-Reason": reason
         }
       ).content
     )
@@ -168,6 +170,25 @@ class DiscordWebSocket:
           "X-Audit-Log-Reason" : reason
         },
         data    = dumps(data)
+      ).content
+    )
+
+  
+  def put(
+    self,
+    endpoint : str,
+    data     : Dict[str, Any] = {},
+    reason : Optional[str] = None
+  ) -> Dict[str, Any]:
+    return loads(
+      requests.put(
+        f"{self.api}{endpoint}",
+        headers = {
+          "Authorization" : f"Bot {self.app._App__token}",
+          "Content-Type"  : "application/json",
+          "X-Audit-Log-Reason": reason
+        },
+        data = dumps(data)
       ).content
     )
 

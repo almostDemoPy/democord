@@ -30,9 +30,9 @@ if TYPE_CHECKING:
   from .channels import GuildChannel
   from .emoji    import Emoji
   from .guild    import (
-                     Guild,
-                     GuildPreview
-                     )
+                        Guild,
+                        GuildPreview
+                        )
   from .logger   import Logger
   from .member   import Member
   from .role     import Role
