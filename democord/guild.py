@@ -242,7 +242,7 @@ class Guild:
 
 
   @property
-  def me(self) -> Member:
+  def me(self) -> Optional[Member]:
     return self.members(id = self.ws.app.info.id)
 
 
