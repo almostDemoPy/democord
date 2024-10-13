@@ -241,6 +241,11 @@ class Guild:
     return self.name
 
 
+  @property
+  def me(self) -> Member:
+    return self.members(id = self.ws.app.info.id)
+
+
   async def add_member(
     self,
     user : User,
