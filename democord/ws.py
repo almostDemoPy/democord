@@ -173,7 +173,7 @@ class DiscordWebSocket:
   def put(
     self,
     endpoint : str,
-    data     : Dict[str, Any],
+    data     : Dict[str, Any] = {},
     reason : Optional[str] = None
   ) -> Dict[str, Any]:
     return loads(
