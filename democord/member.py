@@ -35,6 +35,25 @@ class Member:
 
     return self.user.id
 
+  async def add_roles(
+    self,
+    *roles : Role,
+    reason : Optional[str] = None
+  ) -> Member:
+    try:
+      # check permission: manage_roles
+      for role in roles:
+        if not isinstance(role, Role): raise TypeError("roles: must be of type <Role>")
+        if role in self.roles: continue
+        response : Dict[str, Any] = self.ws.put(
+          PUT.member_role(self.guild.id, self.id, role.id),
+          reason = reason
+        )
+        self : Self = Member.from_data(response)
+      return self
+    except Exception as error:
+      if self.ws.app.logger: self.ws.app.logger.error(error)
+
   async def edit(
     self,
     **attributes
