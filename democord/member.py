@@ -2,6 +2,7 @@ from .channels import VoiceChannel
 from .reqs import PATCH
 from .role import Role
 from .user  import User
+from datetime import datetime, timedelta
 from typing import *
 
 
@@ -75,6 +76,28 @@ class Member:
         data = data,
         reason = reason
       )
+      self : Self = Member.from_data(self.ws, response)
+      return self
+    except Exception as error:
+      if self.ws.app.logger: self.ws.app.logger.error(error)
+
+  async def timeout(
+    self,
+    until : Optional[timedelta] = None,
+    reason : Optional[str] = None
+  ) -> Member:
+    try:
+      if until and not isinstance(until, timedelta): raise TypeError("until: must be of type <timedelta> or <NoneType>")
+      if reason and not isinstance(reason, str): raise TypeError("reason: must be of type <str>")
+      if until: until += datetime.now()
+      response : Dict[str, Any] = self.ws.patch(
+        PATCH.member(self.guild.id, self.id),
+        data = {
+          "communication_disabled_until": until
+        },
+        reason = reason
+      )
+      # check permission: moderate_members
       self : Self = Member.from_data(self.ws, response)
       return self
     except Exception as error:
