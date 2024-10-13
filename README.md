@@ -1,5 +1,5 @@
-# democord
-A Python library for the Discord API
+<h1 align="center">democord</h1>
+<p align="center">A Python library for the Discord API</p>
 
 
 ![Static Badge](https://img.shields.io/badge/demo.py-4584b6)
