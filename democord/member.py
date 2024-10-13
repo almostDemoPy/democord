@@ -93,7 +93,7 @@ class Member:
       response : Dict[str, Any] = self.ws.patch(
         PATCH.member(self.guild.id, self.id),
         data = {
-          "communication_disabled_until": until
+          "communication_disabled_until": until.timestamp()
         },
         reason = reason
       )
