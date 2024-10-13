@@ -477,6 +477,22 @@ class Guild:
       if self.ws.app.logger: self.ws.app.logger.error(error)
 
 
+  async def kick(
+    self,
+    member_id : int,
+    reason : Optional[str] = None
+  ) -> None:
+    try:
+      if member_id not in self.members: raise ValueError(f"No member with an ID: {member_id}")
+      # check permission: kick_members
+      response : Dict[str, Any] = self.ws.delete(
+        DELETE.member(self.id, member_id),
+        reason = reason
+      )
+    except Exception as error:
+      if self.ws.app.logger: self.ws.app.logger.error(error)
+
+
   async def preview(self) -> GuildPreview:
     try:
       return GuildPreview.from_data(self.ws.get(GET.guild_preview(self.id)))
