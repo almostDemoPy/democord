@@ -248,7 +248,7 @@ class Guild:
   ) -> Member:
     try:
       if not isinstance(access_token, str): raise TypeError("access_token: must be of type <str>")
-      if not isinstance(nick, str): raise TypeError("nick: must be of type <str>")
+      if nick and not isinstance(nick, str): raise TypeError("nick: must be of type <str>")
       if isinstance(roles, list):
         for role in roles:
           if not isinstance(role, Role): raise ValueError("roles: must contain <Role> objects")
