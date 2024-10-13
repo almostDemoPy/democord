@@ -130,6 +130,11 @@ class CallableGuildMembers(list):
       )
     ]
     return (matches[0] if len(matches) == 1 else matches) if matches else None
+
+  
+  def __contains__(self, member : Union[Member, int]) -> bool:
+    if not isinstance(member, (Member, int)): raise TypeError("member: must be of type <Member> or <int>")
+    return int(member) in self
   
 
 class GuildPreview:
