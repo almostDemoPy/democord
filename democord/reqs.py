@@ -34,3 +34,4 @@ class POST(Enum):
 
 class PUT(Enum):
   member : str = lambda guild_id, user_id : f"/guilds{guild_id}/members/{user_id}"
+  member_role : str = lambda guild_id, member_id, role_id : f"/guilds/{guild_id}/members/{member_id}/roles/{role_id}"
