@@ -79,13 +79,15 @@ class DiscordWebSocket:
 
   def delete(
     self,
-    endpoint : str
+    endpoint : str,
+    reason : Optional[str] = None
   ) -> Dict[str, Any]:
     return loads(
       requests.delete(
         f"{self.api}{endpoint}",
         headers = {
-          "Authorization": f"Bot {self.app._App__token}"
+          "Authorization": f"Bot {self.app._App__token}",
+          "X-Audit-Log-Reason": reason
         }
       ).content
     )
