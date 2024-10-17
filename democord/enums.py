@@ -43,13 +43,11 @@ class ExplicitContentFilter(Enum):
 
 
 class ForumLayout(Enum):
-  not_set      = None
   list_view    = 1
   gallery_view = 2
 
 
 class ForumSortOrder(Enum):
-  not_set         = None
   latest_activity = 0
   creation_date   = 1
 
