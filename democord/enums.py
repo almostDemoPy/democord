@@ -42,6 +42,11 @@ class ExplicitContentFilter(Enum):
   all_members           = 2
 
 
+class ForumSortOrder(Enum):
+  latest_activity = 0
+  creation_date   = 1
+
+
 class GatewayEvents(Enum):
   """
   Type of Dispatch gateway event
