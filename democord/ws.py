@@ -2,27 +2,28 @@ import asyncio
 import rel
 import requests
  
-from .appinfo  import AppInfo
-from .enums    import (
-                      GatewayEvents,
-                      PayloadType
-                      )
-from .guild    import Guild
-from .payloads import Payload
-from .reqs     import (
-                      GET,
-                      PATCH
-                      )
-from .user     import User
-from json      import (
-                      dumps,
-                      loads
-                      )
-from random    import random
-from threading import Thread
-from traceback import print_exc
-from typing    import *
-from websocket import WebSocketApp
+from .appinfo     import AppInfo
+from .constructor import Constructor
+from .enums       import (
+                         GatewayEvents,
+                         PayloadType
+                         )
+from .guild       import Guild
+from .payloads    import Payload
+from .reqs        import (
+                         GET,
+                         PATCH
+                         )
+from .user        import User
+from json         import (
+                         dumps,
+                         loads
+                         )
+from random       import random
+from threading    import Thread
+from traceback    import print_exc
+from typing       import *
+from websocket    import WebSocketApp
 
 if TYPE_CHECKING:
   from .app import App
@@ -75,6 +76,7 @@ class DiscordWebSocket:
     self.last_sequence        : Optional[int] = None
     self.__resume_gateway_url : str           = None
     self.__session_id         : str           = None
+    Constructor.ws : Self = self
 
 
   def delete(
