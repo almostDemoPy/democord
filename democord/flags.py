@@ -18,6 +18,12 @@ class ApplicationFlags(Enum):
   presence_limited          = 1 << 13
 
 
+class ChannelFlags(Enum):
+  pinned                      = 1 << 1
+  require_tag                 = 1 << 4
+  hide_media_download_options = 1 << 15
+
+
 class SystemChannelFlags(Enum):
   """
   Enumerates a system channel's flags
