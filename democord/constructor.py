@@ -18,6 +18,7 @@ from .errors      import (
                          BotMissingPermissions,
                          MissingPermissions
                          )
+from .file        import File
 from .flags       import ChannelFlags
 from .member      import Member
 from .permissions import PermissionOverwrites
@@ -137,7 +138,7 @@ class Constructor:
     error : Exception = err_cls(message)
     match error:
       case BotMissingPermissions | MissingPermissions:
-        error.missing_permissions : List[PermissionFlags] = list(data)
+        error.missing_permissions : List[PermissionFlags] = [permission for permission in data if isinstance(permission, PermissionFlags)]
     return error
 
 
