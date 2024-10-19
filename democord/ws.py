@@ -490,7 +490,7 @@ class DiscordWebSocket:
 
             case GatewayEvents.GuildCreate:
               if self.app.logger and self.app.logger.debug_mode: self.app.logger.debug("Received GUILD_CREATE event")
-              guild = Guild.from_data(self, payload.d)
+              guild = Constructor.guild(self, payload.d)
               Thread(
                 target = asyncio.run,
                 args   = [
