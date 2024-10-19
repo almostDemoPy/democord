@@ -10,7 +10,13 @@ from .emoji       import Emoji
 from .enums       import (
                          ChannelType,
                          ForumLayout,
-                         ForumSortOrder
+                         ForumSortOrder,
+                         PermissionFlags
+                         )
+from .errors      import (
+                         APILimit,
+                         BotMissingPermissions,
+                         MissingPermissions
                          )
 from .flags       import ChannelFlags
 from .member      import Member
@@ -124,6 +130,15 @@ class Constructor:
   def emoji(data : Dict[str, Any]) -> Emoji:
     emoji : Emoji = Emoji()
     return emoji
+
+
+  @staticmethod
+  def exception(err_cls : Exception, *data : Any, message : Optional[str] = None) -> Exception:
+    error : Exception = err_cls(message)
+    match error:
+      case BotMissingPermissions | MissingPermissions:
+        error.missing_permissions : List[PermissionFlags] = list(data)
+    return error
 
 
   @staticmethod

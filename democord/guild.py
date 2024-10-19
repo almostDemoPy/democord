@@ -455,7 +455,7 @@ class Guild:
       if response.get("code"):
         match ErrorCodes(response.get("code")):
           case ErrorCodes.MissingPermissions:
-            raise BotMissingPermissions(PermissionFlags.manage_guild)
+            raise Constructor.exception(BotMissingPermissions, PermissionFlags.manage_guild)
       return Guild.from_data(
         self.ws,
         response

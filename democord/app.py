@@ -1,24 +1,25 @@
-from .appinfo  import AppInfo
-from .channels import GuildChannel
-from .enums    import (
-                      DefaultMessageNotification,
-                      ExplicitContentFilter,
-                      VerificationLevel
-                      )
-from .errors   import APILimit
-from .events   import AppEvents
-from .flags    import SystemChannelFlags
-from .guild    import Guild
-from .intents  import Intents
-from .logger   import Logger
-from .reqs     import GET, POST
-from .role     import Role
-from .user     import User
-from .ws       import DiscordWebSocket
-from dotenv    import load_dotenv
-from os        import getenv
-from threading import Thread
-from typing    import *
+from .appinfo     import AppInfo
+from .channels    import GuildChannel
+from .constructor import Constructor
+from .enums       import (
+                         DefaultMessageNotification,
+                         ExplicitContentFilter,
+                         VerificationLevel
+                         )
+from .errors      import APILimit
+from .events      import AppEvents
+from .flags       import SystemChannelFlags
+from .guild       import Guild
+from .intents     import Intents
+from .logger      import Logger
+from .reqs        import GET, POST
+from .role        import Role
+from .user        import User
+from .ws          import DiscordWebSocket
+from dotenv       import load_dotenv
+from os           import getenv
+from threading    import Thread
+from typing       import *
 
 
 class CallableGuilds(list):
@@ -185,7 +186,7 @@ class App:
   ) -> Guild:
     try:
       if len(self.guilds) >= 10:
-        raise APILimit("Bot can only create guilds when in less than 10 guilds.")
+        raise Constructor.exception(APILimit, message = "Bot can only create guilds when in less than 10 guilds.")
       if len(name) < 2 or len(name) > 100:
         raise ValueError("Guild.name length must be between 2 and 100")
       data : Dict[str, Any] = {
