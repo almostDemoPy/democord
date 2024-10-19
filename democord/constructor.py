@@ -247,3 +247,33 @@ class Constructor:
       case "banner": endpoint : str = "banners"
     asset.url : str = f"https://cdn.discordapp.com/{endpoint}/{data["id"]}/{asset.key}.{"gif" if asset.key.startswith("a_") else "png"}"
     return asset
+
+
+  @staticmethod
+  def user(data : Union[Dict[str, Any], int]) -> User:
+    user : User = None
+    match type(data):
+      case dict:
+        user : User = User()
+        for attribute in data:
+          match attribute:
+            case "id" | "discriminator": user.__dict__[attribute] : int = int(data[attribute])
+            case "global_name":
+              if not data[attribute]: user.__dict__[attribute] : str = data["username"]
+              else:                   user.__dict__[attribute] : str = data[attribute]
+            case "banner": user.__dict__[attribute] : Asset = Constructor.user_asset(attribute, data) if data[attribute] else None
+            case "avatar":
+              user.__dict__[attribute] : str = CallableAvatar(f"https://cdn.discordapp.com/avatars/{data["id"]}/{data["avatar"]}.{"gif" if data["avatar"].startswith("a_") else "png"}") if data[attribute] else ""
+              user.default_avatar      : str = f"https://cdn.discordapp.com/embed/avatars/{(int(data["id"]) >> 22) % 6 if int(data["discriminator"]) == 0 else int(data["discriminator"]) % 5}.png"
+              user.avatar_decoration   : str = f"https://cdn.discordapp.com/avatar-decoration-presets/{data["avatar_decoration_data"]["asset"]}.png" if data.get("avatar_decoration_data") else ""
+            case "accent_color": user.__dict__[attribute]     : Color       = Color.from_int(data[attribute])
+            case "locale":       user.__dict__[attribute]     : Locale      = Locale._value2member_map_[data[attribute]]
+            case "flags":        user.__dict__[attribute]     : List[str]   = [name for name, flag in UserFlags._member_map_.items() if (data[attribute] & flag.value) == flag.value]
+            case "public_flags": user.__dict__["user_flags"]  : List[str]   = [name for name, flag in UserFlags._member_map_.items() if (data[attribute] & flag.value) == flag.value]
+            case "premium_type": user.__dict__[attribute]     : PremiumType = PremiumType._value2member_map_[data[attribute]]
+            case _:              user.__dict__[attribute]     : Any         = data[attribute]
+      case int:
+        if ws.app.users(id = user_id): return ws.app.users(id = user_id)
+        user : User = Constructor.user(ws.get(f"/users/{user_id}"))
+        ws.app.users.append(user)
+    return user
