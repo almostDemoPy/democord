@@ -34,6 +34,7 @@ from .guild       import (
                          )
 from .member      import Member
 from .permissions import PermissionOverwrites
+from .sticker     import Sticker
 from .user        import User
 from datetime     import datetime
 from typing       import *
@@ -229,6 +230,12 @@ class Constructor:
         case "user": member.__dict__[attribute] : User = User.from_data(data[attribute])
         case "nick": member.__dict__[attribute] : str  = data[attribute]
     return member
+
+
+  @staticmethod
+  def sticker(data : Dict[str, Any]) -> Sticker:
+    sticker : Sticker = Sticker()
+    return sticker
 
   
   @staticmethod
