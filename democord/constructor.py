@@ -25,6 +25,7 @@ if TYPE_CHECKING:
 class Constructor:
   ws : DiscordWebSocket = None
 
+
   @staticmethod
   def channel(data : Dict[str, Any]) -> Union[TextChannel]:
     try:
@@ -117,6 +118,7 @@ class Constructor:
     except Exception as error:
       if ws.app.logger: ws.app.logger.error(error)
 
+
   @staticmethod
   def guild_asset(asset_type : str, data : Dict[str, Any]) -> Asset:
     asset : Asset = Asset()
@@ -127,6 +129,7 @@ class Constructor:
       case "splash": endpoint : str = "splashes"
     asset.url : str = f"https://cdn.discordapp.com/{endpoint}/{data["id"]}/{asset.key}.{"gif" if asset.key.startswith("a_") else "png"}"
     return asset
+
 
   @staticmethod
   def info(data : Dict[str, Any]) -> AppInfo:
@@ -142,3 +145,14 @@ class Constructor:
         case _:
           info.__dict__[attribute] : Any = data[attribute]
     return info
+
+  
+  @staticmethod
+  def user_asset(asset_type : str, data : Dict[str, Any]) -> Asset:
+    asset : Asset = Asset()
+    asset.key : str = data[asset_type]
+    match asset_type:
+      case "avatar": endpoint : str = "avatars"
+      case "banner": endpoint : str = "banners"
+    asset.url : str = f"https://cdn.discordapp.com/{endpoint}/{data["id"]}/{asset.key}.{"gif" if asset.key.startswith("a_") else "png"}"
+    return asset

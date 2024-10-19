@@ -1,12 +1,13 @@
-from .asset   import Asset
-from .color   import Color
-from .enums   import PremiumType
-from .flags   import UserFlags
-from .locales import Locale
-from typing   import *
+from .asset       import Asset
+from .color       import Color
+from .constructor import Constructor
+from .enums       import PremiumType
+from .flags       import UserFlags
+from .locales     import Locale
+from typing       import *
 
 if TYPE_CHECKING:
-  from .ws    import DiscordWebSocket
+  from .ws        import DiscordWebSocket
 
 
 class CallableAvatar(str):
@@ -85,7 +86,7 @@ class User:
         case "global_name":
           if not data[attribute]: user.__dict__[attribute] : str = data["username"]
           else:                   user.__dict__[attribute] : str = data[attribute]
-        case "banner": user.__dict__[attribute] : Asset = Asset.from_user(attribute, data) if data[attribute] else None
+        case "banner": user.__dict__[attribute] : Asset = Constructor.user_asset(attribute, data) if data[attribute] else None
         case "avatar":
           user.__dict__[attribute] : str = CallableAvatar(f"https://cdn.discordapp.com/avatars/{data["id"]}/{data["avatar"]}.{"gif" if data["avatar"].startswith("a_") else "png"}") if data[attribute] else ""
           user.default_avatar      : str = f"https://cdn.discordapp.com/embed/avatars/{(int(data["id"]) >> 22) % 6 if int(data["discriminator"]) == 0 else int(data["discriminator"]) % 5}.png"
