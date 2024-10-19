@@ -6,6 +6,7 @@ from .asset       import Asset
 from .channels    import (
                          TextChannel
                          )
+from .emoji       import Emoji
 from .enums       import (
                          ChannelType,
                          ForumLayout,
@@ -117,6 +118,12 @@ class Constructor:
       return channel
     except Exception as error:
       if ws.app.logger: ws.app.logger.error(error)
+
+
+  @staticmethod
+  def emoji(data : Dict[str, Any]) -> Emoji:
+    emoji : Emoji = Emoji()
+    return emoji
 
 
   @staticmethod
