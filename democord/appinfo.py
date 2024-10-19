@@ -116,17 +116,6 @@ class AppInfo:
     Hex encoded key for verification in interactions and the GameSDK's GetTicket
   """
 
-  def __init__(
-    self,
-    attributes : Dict[str, Any]
-  ) -> None:
-    for attribute in attributes:
-      match attribute:
-        case "flags"                 : self.__dict__["flags"]              : Union[int, List[str]] = AppInfoFlags(attributes[attribute])
-        case "bot_public"            : self.__dict__["public"]             : bool                  = attributes[attribute]
-        case "bot_require_code_grant": self.__dict__["require_code_grant"] : bool                  = attributes[attribute]
-        case _                       : self.__dict__[attribute]            : Any                   = attributes[attribute]
-
 
   def __getattribute__(
     self,
@@ -172,24 +161,3 @@ class AppInfo:
     int
     """
     return self._flags_value
-
-
-  @classmethod
-  def from_data(
-    cls,
-    data : Dict[str, Any]
-  ) -> Self:
-    """
-    Construct an AppInfo instance from the given dictionary payload
-
-    Parameters
-    ----------
-    data : Dict[str, Any]
-      Dictionary payload of the application's info
-
-
-    Returns
-    -------
-    AppInfo
-    """
-    return cls(data)

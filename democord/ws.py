@@ -416,7 +416,7 @@ class DiscordWebSocket:
     self.app._private_channels    : list    = payload.d["private_channels"]
     self.app._presences           : list    = payload.d["presences"]
     self.app._guild_join_requests : list    = payload.d["guild_join_requests"]
-    self.app._appinfo             : AppInfo = AppInfo.from_data(payload.d["application"])
+    self.app._appinfo             : AppInfo = Constructor.info(payload.d["application"])
     Thread(
       target = asyncio.run,
       args   = [
