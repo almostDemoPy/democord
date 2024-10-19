@@ -141,23 +141,7 @@ class CallableGuildMembers(list):
     return int(member) in self
   
 
-class GuildPreview:
-
-  @classmethod
-  def from_data(cls, data : Dict[str, Any]) -> Self:
-    preview : Self = cls()
-    for attribute in data:
-      match attribute:
-        case "id": preview.id : int = data[attribute]
-        case "name": preview.name : str = data[attribute]
-        case "icon" | "splash" | "discovery_splash": preview.icon : Asset = Constructor.guild_asset(attribute, data)
-        case "emojis": preview.emojis : List[Emoji] = [Emoji.from_data(emoji) for emoji in data[attribute]]
-        case "features": preview.features : List[str] = data[attribute]
-        case "approximate_member_count": preview.approximate_member_count : int = data[attribute]
-        case "approximate_presence_count": preview.approximate_presence_count : int = data[attribute]
-        case "description": preview.description : str = data[attribute]
-        case "stickers": preview.stickers : List[Sticker] = [Sticker.from_data(sticker) for sticker in data[attribute]]
-    return preview
+class GuildPreview: ...
 
 
 class Guild:
@@ -509,7 +493,7 @@ class Guild:
 
   async def preview(self) -> GuildPreview:
     try:
-      return GuildPreview.from_data(self.ws.get(GET.guild_preview(self.id)))
+      return Constructor.guild_preview(self.ws.get(GET.guild_preview(self.id)))
     except Exception as error:
       if self.ws.app.logger: self.ws.app.logger.error(error)
 

@@ -20,6 +20,7 @@ from .errors      import (
                          )
 from .file        import File
 from .flags       import ChannelFlags
+from .guild       import GuildPreview
 from .member      import Member
 from .permissions import PermissionOverwrites
 from .user        import User
@@ -152,6 +153,24 @@ class Constructor:
       case "splash": endpoint : str = "splashes"
     asset.url : str = f"https://cdn.discordapp.com/{endpoint}/{data["id"]}/{asset.key}.{"gif" if asset.key.startswith("a_") else "png"}"
     return asset
+
+  
+  @staticmethod
+  def guild_preview(data : Dict[str, Any]) -> GuildPreview:
+    preview : GuildPreview = GuildPreview()
+    for attribute in data:
+      match attribute:
+        case "id": preview.id : int = data[attribute]
+        case "name": preview.name : str = data[attribute]
+        case "icon" | "splash" | "discovery_splash": preview.icon : Asset = Constructor.guild_asset(attribute, data)
+        case "emojis": preview.emojis : List[Emoji] = [Emoji.from_data(emoji) for emoji in data[attribute]]
+        case "features": preview.features : List[str] = data[attribute]
+        case "approximate_member_count": preview.approximate_member_count : int = data[attribute]
+        case "approximate_presence_count": preview.approximate_presence_count : int = data[attribute]
+        case "description": preview.description : str = data[attribute]
+        case "stickers": preview.stickers : List[Sticker] = [Sticker.from_data(sticker) for sticker in data[attribute]]
+    return preview
+
 
 
   @staticmethod
