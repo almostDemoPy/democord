@@ -149,30 +149,3 @@ class Member:
       return self
     except Exception as error:
       if self.ws.app.logger: self.ws.app.logger.error(error)
-
-  @classmethod
-  def from_data(
-    cls,
-    data : Dict[str, Any]
-  ) -> Self:
-    """
-    Construct a Member object from a dictionary payload
-
-
-    Parameters
-    ----------
-    data : Dict[str, Any]
-      Dictionary payload of a Member object
-
-
-    Returns
-    -------
-    Member
-    """
-
-    member : Self = cls()
-    for attribute in data:
-      match attribute:
-        case "user": member.__dict__[attribute] : User = User.from_data(data[attribute])
-        case "nick": member.__dict__[attribute] : str  = data[attribute]
-    return member

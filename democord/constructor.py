@@ -220,6 +220,16 @@ class Constructor:
           info.__dict__[attribute] : Any = data[attribute]
     return info
 
+
+  @staticmethod
+  def member(data : Dict[str, Any]) -> Member:
+    member : Member = Member()
+    for attribute in data:
+      match attribute:
+        case "user": member.__dict__[attribute] : User = User.from_data(data[attribute])
+        case "nick": member.__dict__[attribute] : str  = data[attribute]
+    return member
+
   
   @staticmethod
   def user_asset(asset_type : str, data : Dict[str, Any]) -> Asset:
