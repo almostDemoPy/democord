@@ -1,43 +1,44 @@
-from .asset    import Asset
-from .channels import (
-                      GuildChannel,
-                      TextChannel,
-                      Thread
-                      )
-from .emoji    import Emoji
-from .enums    import (
-                      ChannelType,
-                      DefaultMessageNotification,
-                      ExplicitContentFilter,
-                      ErrorCodes,
-                      GuildFeatures,
-                      MFALevel,
-                      NSFWLevel,
-                      PermissionFlags,
-                      PremiumTier,
-                      VerificationLevel
-                      )
-from .errors   import (
-                      BotMissingPermissions,
-                      MissingPermissions
-                      )
-from .file     import File
-from .flags    import (
-                      SystemChannelFlags
-                      )
-from .locales  import Locale
-from .member   import Member
-from .reqs     import (
-                      DELETE,
-                      GET,
-                      PATCH,
-                      PUT
-                      )
-from .user     import User
-from typing    import *
+from .asset       import Asset
+from .channels    import (
+                         GuildChannel,
+                         TextChannel,
+                         Thread
+                         )
+from .constructor import Constructor
+from .emoji       import Emoji
+from .enums       import (
+                         ChannelType,
+                         DefaultMessageNotification,
+                         ExplicitContentFilter,
+                         ErrorCodes,
+                         GuildFeatures,
+                         MFALevel,
+                         NSFWLevel,
+                         PermissionFlags,
+                         PremiumTier,
+                         VerificationLevel
+                         )
+from .errors      import (
+                         BotMissingPermissions,
+                         MissingPermissions
+                         )
+from .file        import File
+from .flags       import (
+                         SystemChannelFlags
+                         )
+from .locales     import Locale
+from .member      import Member
+from .reqs        import (
+                         DELETE,
+                         GET,
+                         PATCH,
+                         PUT
+                         )
+from .user        import User
+from typing       import *
 
 if TYPE_CHECKING:
-  from .ws     import DiscordWebSocket
+  from .ws        import DiscordWebSocket
 
 
 class CallableSystemChannelFlags(list):
@@ -149,7 +150,7 @@ class GuildPreview:
       match attribute:
         case "id": preview.id : int = data[attribute]
         case "name": preview.name : str = data[attribute]
-        case "icon" | "splash" | "discovery_splash": preview.icon : Asset = Asset.from_guild(attribute, data)
+        case "icon" | "splash" | "discovery_splash": preview.icon : Asset = Constructor.guild_asset(attribute, data)
         case "emojis": preview.emojis : List[Emoji] = [Emoji.from_data(emoji) for emoji in data[attribute]]
         case "features": preview.features : List[str] = data[attribute]
         case "approximate_member_count": preview.approximate_member_count : int = data[attribute]
@@ -543,7 +544,7 @@ class Guild:
     for attribute in data:
       match attribute:
         case "icon" | "splash" | "discovery_splash":
-          if data[attribute]:                 guild.__dict__[attribute] : Asset     = Asset.from_guild(attribute, data)
+          if data[attribute]:                 guild.__dict__[attribute] : Asset     = Constructor.guild_asset(attribute, data)
         case "id":                            guild.__dict__[attribute] : int       = int(data[attribute])
         case "owner_id":                      guild.__dict__["owner"]   : User      = User.from_id(ws, data["owner_id"])
         case "default_message_notifications": guild.__dict__[attribute] : str       = DefaultMessageNotification(data[attribute]).name

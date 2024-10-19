@@ -26,21 +26,6 @@ class Constructor:
   ws : DiscordWebSocket = None
 
   @staticmethod
-  def info(data : Dict[str, Any]) -> AppInfo:
-    info : AppInfo = AppInfo()
-    for attribute in data:
-      match attribute:
-        case "bot_public":
-          info.__dict__["public"] : bool = data[attribute]
-        case "bot_require_code_grant":
-          info.__dict__["require_code_grant"] : bool = data[attribute]
-        case "flags":
-          info.__dict__["flags"] : Union[List[str], int] = AppInfoFlags(data[attribute])
-        case _:
-          info.__dict__[attribute] : Any = data[attribute]
-    return info
-
-  @staticmethod
   def channel(data : Dict[str, Any]) -> Union[TextChannel]:
     try:
       channel_classes : Dict[ChannelType, GuildChannel] = {
@@ -131,3 +116,29 @@ class Constructor:
       return channel
     except Exception as error:
       if ws.app.logger: ws.app.logger.error(error)
+
+  @staticmethod
+  def guild_asset(asset_type : str, data : Dict[str, Any]) -> Asset:
+    asset : Asset = Asset()
+    asset.key : str = data[asset_type]
+    match asset_type:
+      case "discovery_splash": endpoint : str = "discovery_splashes"
+      case "icon": endpoint : str = "icons"
+      case "splash": endpoint : str = "splashes"
+    asset.url : str = f"https://cdn.discordapp.com/{endpoint}/{data["id"]}/{asset.key}.{"gif" if asset.key.startswith("a_") else "png"}"
+    return asset
+
+  @staticmethod
+  def info(data : Dict[str, Any]) -> AppInfo:
+    info : AppInfo = AppInfo()
+    for attribute in data:
+      match attribute:
+        case "bot_public":
+          info.__dict__["public"] : bool = data[attribute]
+        case "bot_require_code_grant":
+          info.__dict__["require_code_grant"] : bool = data[attribute]
+        case "flags":
+          info.__dict__["flags"] : Union[List[str], int] = AppInfoFlags(data[attribute])
+        case _:
+          info.__dict__[attribute] : Any = data[attribute]
+    return info
