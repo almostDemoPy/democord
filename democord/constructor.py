@@ -264,6 +264,8 @@ class Constructor:
           invite.__dict__[attribute] : Optional[Union[DMChannel, GuildChannel]] = Constructor.channel(data[attribute]) if data[attribute] else None
         case "code":
           invite.__dict__[attribute] : str = data[attribute]
+        case "created_at":
+          invite.__dict__[attribute] : datetime = datetime.fromisoformat(data[attribute])
         case "expires_at":
           invite.__dict__[attribute] : Optional[datetime] = datetime.fromisoformat(data[attribute]) if data[attribute] else None
         case "guild":
@@ -271,16 +273,24 @@ class Constructor:
         case "guild_scheduled_event":
           # implement: ScheduledEvent
           ...
+        case "inviter":
+          invite.__dict__[attribute] : User = Constructor.user(data[attribute])
+        case "max_age":
+          invite.__dict__[attribute] : int = data[attribute]
+        case "max_uses":
+          invite.__dict__[attribute] : int = data[attribute]
         case "target_application":
           invite.target.__dict__["application"] : AppInfo = Constructor.info(data[attribute])
         case "target_type":
           invite.target.__dict__["type"] : InviteTargetType = InviteTargetType(data[attribute])
         case "target_user":
           invite.target.__dict__["user"] : User = Constructor.user(data[attribute])
+        case "temporary":
+          invite.__dict__[attribute] : bool = data[attribute]
         case "type":
           invite.__dict__[attribute] : InviteType = InviteType(data[attribute])
-        case "inviter":
-          invite.__dict__[attribute] : User = Constructor.user(data[attribute])
+        case "uses":
+          invite.__dict__[attribute] : int = data[attribute]
     return invite
 
 
