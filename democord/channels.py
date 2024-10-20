@@ -5,9 +5,14 @@ from .enums       import (
                          ErrorCodes,
                          ForumLayout,
                          ForumSortOrder,
+                         InviteTargetType,
                          VideoQualityMode
                          )
-from .errors      import BotMissingPermissions
+from .errors      import (
+                         BotMissingPermissions,
+                         Forbidden,
+                         MissingArguments
+                         )
 from .file        import File
 from .flags       import ChannelFlags
 from .guild       import Guild
@@ -17,6 +22,7 @@ from .permissions import PermissionOverwrites
 from .reqs        import (
                          DELETE,
                          PATCH,
+                         POST,
                          PUT
                          )
 from .role        import Role
@@ -93,6 +99,68 @@ class GuildChannel:
       }
       if attribute in nullables[ChannelType[self.type]]: return self.__dict__.get(attribute)
       else: return super().__getattribute__(attribute)
+    except Exception as error:
+      if self.ws.app.logger: self.ws.app.logger.error(error)
+
+
+  async def create_invite(self, **attributes) -> Invite:
+    try:
+      reason : Optional[str] = str(attributes["reason"]) if attributes.get("reason") else None
+      data : Dict[str, Any] = {}
+      for attribute in attributes:
+        match attribute:
+          case "max_age":
+            if not isinstance(attributes[attribute], int):
+              raise TypeError("max_age: must be of type <int>")
+            if attributes[attribute] < 0 or attributes[attribute] > 604_800:
+              raise ValueError("max_age: must be between 0 and 604800")
+            data[attribute] : int = attributes[attribute]
+          case "max_uses":
+            if not isinstance(attributes[attribute], int):
+              raise TypeError("max_uses: must be of type <int>")
+            if attributes[attribute] < 0 or attributes[attribute] > 100:
+              raise ValueError("max_uses: must be between 0 and 100")
+            data[attribute] : bool = attributes[attribute]
+          case "target_application":
+            if not isinstance(attributes[attribute], AppInfo):
+              raise TypeError("target_application: must be of type <AppInfo>")
+            if not attributes.get("target_type"):
+              raise Constructor.exception(MissingArguments, "target_type", message = attribute)
+            if attributes["target_type"] != InviteTargetType.embedded_application:
+              raise Constructor.exception(Forbidden, message = "target_application: can only be specified if target_type is InviteTargetType.embedded_application")
+            if "embedded" not in self.ws.app.info:
+              raise Constructor.exception(Forbidden, message = f"{attribute}: application is not flagged as EMBEDDED")
+            data["target_application_id"] : str = str(attributes[attribute].id)
+          case "target_type":
+            if not isinstance(attributes[attribute], InviteTargetType):
+              raise TypeError("target_type: must be of type <InviteTargetType>")
+            if attributes[attribute] == InviteTargetType.stream and not attributes.get("target_user"):
+              raise Constructor.exception(MissingArguments, "target_user", message = attribute)
+            if attributes[attribute] == InviteTargetType.embedded_application and not attributes.get("target_application"):
+              raise Constructor.exception(MissingArguments, "target_application", message = attribute)
+            data[attribute] : int = attributes[attribute].value
+          case "target_user":
+            if not isinstance(attributes[attribute], User):
+              raise TypeError("target_user: must be of type <User>")
+            if not attributes.get("target_type"):
+              raise Constructor.exception(MissingArguments, "target_type", message = attribute)
+            if attributes["target_type"] != InviteTargetType.stream:
+              raise Constructor.exception(Forbidden, message = "target_user: can only be specified if target_type is InviteTargetType.stream")
+            data["target_user_id"] : str = str(attributes[attribute].id)
+          case "temporary":
+            if not isinstance(attributes[attribute], bool):
+              raise TypeError("temporary: must be of type <bool>")
+            data[attribute] : bool = attributes[attribute]
+          case "unique":
+            if not isinstance(attributes[attribute], bool):
+              raise TypeError("unique: must be of type <bool>")
+            data[attribute] : bool = attributes[attribute]
+      response : Dict[str, Any] = self.ws.post(
+        POST.channel_invite(self.id),
+        data = data,
+        reason = reason
+      )
+      return Constructor.invite(response)
     except Exception as error:
       if self.ws.app.logger: self.ws.app.logger.error(error)
 

@@ -33,6 +33,8 @@ from .enums       import (
 from .errors      import (
                          APILimit,
                          BotMissingPermissions,
+                         Forbidden,
+                         MissingArguments,
                          MissingPermissions
                          )
 from .file        import File
@@ -177,9 +179,12 @@ class Constructor:
   @staticmethod
   def exception(err_cls : Exception, *data : Any, message : Optional[str] = None) -> Exception:
     error : Exception = err_cls(message)
+    error.message : str = message
     match error:
       case BotMissingPermissions | MissingPermissions:
         error.missing_permissions : List[PermissionFlags] = [permission for permission in data if isinstance(permission, PermissionFlags)]
+      case MissingArguments:
+        error.missing_arguments : List[str] = [argument for argument in data]
     return error
 
 
