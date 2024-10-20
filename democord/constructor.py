@@ -8,6 +8,7 @@ from .channels    import (
                          CategoryChannel,
                          DMChannel,
                          Forum,
+                         GuildChannel,
                          MediaChannel,
                          StageChannel,
                          TextChannel,
@@ -21,6 +22,8 @@ from .enums       import (
                          ExplicitContentFilter,
                          ForumLayout,
                          ForumSortOrder,
+                         InviteTargetType,
+                         InviteType,
                          MFALevel,
                          NSFWLevel,
                          PermissionFlags,
@@ -39,6 +42,10 @@ from .guild       import (
                          CallableSystemChannelFlags,
                          Guild,
                          GuildPreview
+                         )
+from .invite      import (
+                         Invite,
+                         InviteTarget
                          )
 from .member      import Member
 from .permissions import PermissionOverwrites
@@ -244,6 +251,40 @@ class Constructor:
 
 
   @staticmethod
+  def invite(data : Dict[str, Any]) -> Invite:
+    invite : Invite = Invite()
+    invite.__dict__["target"] : InviteTarget = InviteTarget()
+    for attribute in data:
+      match attribute:
+        case "approximate_member_count":
+          invite.__dict__[attribute] : int = data[attribute]
+        case "approximate_presence_count":
+          invite.__dict__[attribute] : int = data[attribute]
+        case "channel":
+          invite.__dict__[attribute] : Optional[Union[DMChannel, GuildChannel]] = Constructor.channel(data[attribute]) if data[attribute] else None
+        case "code":
+          invite.__dict__[attribute] : str = data[attribute]
+        case "expires_at":
+          invite.__dict__[attribute] : Optional[datetime] = datetime.fromisoformat(data[attribute]) if data[attribute] else None
+        case "guild":
+          invite.__dict__[attribute] : Guild = Constructor.guild(data[attribute])
+        case "guild_scheduled_event":
+          # implement: ScheduledEvent
+          ...
+        case "target_application":
+          invite.target.__dict__["application"] : AppInfo = Constructor.info(data[attribute])
+        case "target_type":
+          invite.target.__dict__["type"] : InviteTargetType = InviteTargetType(data[attribute])
+        case "target_user":
+          invite.target.__dict__["user"] : User = Constructor.user(data[attribute])
+        case "type":
+          invite.__dict__[attribute] : InviteType = InviteType(data[attribute])
+        case "inviter":
+          invite.__dict__[attribute] : User = Constructor.user(data[attribute])
+    return invite
+
+
+  @staticmethod
   def member(data : Dict[str, Any]) -> Member:
     member : Member = Member()
     for attribute in data:
@@ -273,6 +314,7 @@ class Constructor:
   @staticmethod
   def user(data : Union[Dict[str, Any], int]) -> User:
     user : User = None
+    user.__dict__["ws"] = self.ws
     match type(data):
       case dict:
         user : User = User()
