@@ -38,6 +38,7 @@ class PATCH(Enum):
 
 class POST(Enum):
   channel_invite : Callable[[int], str] = lambda channel_id : f"/channels/{channel_id}/invites"
+  follow_announcement_channel : Callable[[int], str] = lambda channel_id : f"/channels/{channel_id}/followers"
   guild : str = "/guilds"
 
 class PUT(Enum):

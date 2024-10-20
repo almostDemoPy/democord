@@ -328,6 +328,25 @@ class AnnouncementChannel(GuildChannel):
       if self.ws.app.logger: self.ws.app.logger.error(error)
 
 
+  async def follow(self, target_channel : TextChannel, reason : Optional[str] = None) -> None:
+    try:
+      if not isinstance(target_channel, TextChannel):
+        raise TypeError("target_channel: must be of type <TextChannel>")
+      response : Dict[str, Any] = self.ws.post(
+        POST.follow_announcement_channel(self.id),
+        data = {
+          "webhook_channel_id": str(target_channel.id)
+        },
+        reason = reason
+      )
+      if response.get("code"):
+        match ErrorCodes(response.get("code")):
+          case ErrorCodes.BotMissingPermissions:
+            raise BotMissingPermissions(PermissionFlags.manage_webhooks)
+    except Exception as error:
+      if self.ws.app.logger: self.ws.app.logger.error(error)
+
+
 class CategoryChannel(GuildChannel):
 
   async def edit(
