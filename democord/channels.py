@@ -232,9 +232,23 @@ class GuildChannel:
       if response.get("code"):
         match ErrorCodes(response.get("code")):
           case ErrorCodes.BotMissingPermissions:
-            raise BotMissingPermissions(PermissionFlags.manage_channels)
+            raise Constructor.exception(BotMissingPermissions, PermissionFlags.manage_channels)
       self : Self = Constructor.channel(response)
       return self
+    except Exception as error:
+      if self.ws.app.logger: self.ws.app.logger.error(error)
+
+
+  async def remove_permissions(self, target : Union[Member, Role], reason : Optional[str] = None) -> None:
+    try:
+      response : Dict[None] = self.ws.delete(
+        DELETE.channel_permission(target.id),
+        reason = reason
+      )
+      if response.get("code"):
+        match ErrorCodes(response.get("code")):
+          case ErrorCodes.BotMissingPermissions:
+            raise Constructor.exception(BotMissingPermissions, PermissionFlags.manage_roles)
     except Exception as error:
       if self.ws.app.logger: self.ws.app.logger.error(error)
 
