@@ -11,6 +11,7 @@ from .errors      import BotMissingPermissions
 from .file        import File
 from .flags       import ChannelFlags
 from .guild       import Guild
+from .invite      import Invite
 from .member      import Member
 from .permissions import PermissionOverwrites
 from .reqs        import (
@@ -125,6 +126,16 @@ class GuildChannel:
             raise Constructor.exception(BotMissingPermissions, PermissionFlags.manage_channels)
       self : Union[GuildChannel | DMChannel] = Constructor.channel(response)
       return self
+    except Exception as error:
+      if self.ws.app.logger: self.ws.app.logger.error(error)
+
+
+  async def invites(self) -> List[Invite]:
+    try:
+      response : List[Dict[str, Any]] = self.ws.get(
+        GET.channel_invites(self.id)
+      )
+      return [Constructor.invite(invite_data) for invite_data in response]
     except Exception as error:
       if self.ws.app.logger: self.ws.app.logger.error(error)
 
