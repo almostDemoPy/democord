@@ -11,11 +11,14 @@ from .errors      import BotMissingPermissions
 from .file        import File
 from .flags       import ChannelFlags
 from .guild       import Guild
+from .member      import Member
 from .permissions import PermissionOverwrites
 from .reqs        import (
                          DELETE,
-                         PATCH
+                         PATCH,
+                         PUT
                          )
+from .role        import Role
 from .user        import User
 from typing       import *
 
@@ -153,6 +156,25 @@ class GuildChannel:
             raise BotMissingPermissions(PermissionFlags.manage_channels)
       self : Self = Constructor.channel(response)
       return self
+    except Exception as error:
+      if self.ws.app.logger: self.ws.app.logger.error(error)
+
+
+  async def set_permissions(self, target : Union[Member, Role], overwrites : PermissionOverwrites, reason : Optional[str] = None) -> None:
+    try:
+      response : Dict = self.ws.put(
+        PUT.channel_permissions(self.id, overwrites.id),
+        data = {
+          "allow": str(overwrites.allow),
+          "deny": str(overwrites.deny),
+          "type": 0 if isinstance(target, Role) else 1
+        },
+        reason = reason
+      )
+      if response.get("code"):
+        match ErrorCodes(response.get("code")):
+          case ErrorCodes.BotMissingPermissions:
+            raise BotMissingPermissions(PermissionFlags.manage_roles)
     except Exception as error:
       if self.ws.app.logger: self.ws.app.logger.error(error)
 
