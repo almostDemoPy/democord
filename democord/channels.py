@@ -239,7 +239,7 @@ class GuildChannel:
       if self.ws.app.logger: self.ws.app.logger.error(error)
 
 
-  async def remove_permissions(self, target : Union[Member, Role], reason : Optional[str] = None) -> None:
+  async def remove_overwrites(self, target : Union[Member, Role], reason : Optional[str] = None) -> None:
     try:
       response : Dict[None] = self.ws.delete(
         DELETE.channel_permission(target.id),
