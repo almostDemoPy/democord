@@ -114,6 +114,11 @@ class GuildFeatures(Enum):
   welcome_screen = "WELCOME_SCREEN_ENABLED"
 
 
+class InviteTarget(Enum):
+  stream               = 1
+  embedded_application = 2
+
+
 class InviteType(Enum):
   guild    = 0
   group_dm = 1
