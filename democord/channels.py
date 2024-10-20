@@ -12,7 +12,10 @@ from .file        import File
 from .flags       import ChannelFlags
 from .guild       import Guild
 from .permissions import PermissionOverwrites
-from .reqs        import PATCH
+from .reqs        import (
+                         DELETE,
+                         PATCH
+                         )
 from .user        import User
 from typing       import *
 
@@ -71,6 +74,22 @@ class GuildChannel:
       }
       if attribute in nullables[ChannelType[self.type]]: return self.__dict__.get(attribute)
       else: return super().__getattribute__(attribute)
+    except Exception as error:
+      if self.ws.app.logger: self.ws.app.logger.error(error)
+
+
+  async def delete(self, reason : Optional[str] = None) -> Self:
+    try:
+      response : Dict[str, Any] = self.ws.delete(
+        DELETE.channel(self.id),
+        reason = reason
+      )
+      if response.get("code"):
+        match ErrorCodes(response.get("code")):
+          case ErrorCodes.MissingPermissions:
+            raise Constructor.exception(BotMissingPermissions, PermissionFlags.manage_channels, PermissionFlags.manage_threads)
+      self : Self = Constructor.channel(response)
+      return self
     except Exception as error:
       if self.ws.app.logger: self.ws.app.logger.error(error)
 
