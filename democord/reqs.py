@@ -18,6 +18,7 @@ class GET(Enum):
   """
 
   active_threads : str = lambda guild_id: f"/guilds{guild_id}/threads/active"
+  channel_invites : Callable[[int], str] = lambda channel_id : f"/channels/{channel_id}/invites"
   gateway        : str = "/gateway"
   guild          : Callable[[int, int], str] = lambda guild_id, with_counts  : f"/guilds/{guild_id}?with_counts={with_counts}"
   guild_channels : Callable[[int], str] = lambda guild_id               : f"/guilds/{guild_id}/channels"
