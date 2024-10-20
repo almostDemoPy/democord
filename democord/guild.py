@@ -440,10 +440,7 @@ class Guild:
         match ErrorCodes(response.get("code")):
           case ErrorCodes.MissingPermissions:
             raise Constructor.exception(BotMissingPermissions, PermissionFlags.manage_guild)
-      return Guild.from_data(
-        self.ws,
-        response
-      )
+      return Constructor.guild(response)
     except Exception as error:
       if self.ws.app.logger: self.ws.app.logger.error(error)
 

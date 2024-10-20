@@ -4,7 +4,15 @@ from .appinfo     import (
                          )
 from .asset       import Asset
 from .channels    import (
-                         TextChannel
+                         AnnouncementChannel,
+                         CategoryChannel,
+                         DMChannel,
+                         Forum,
+                         MediaChannel,
+                         StageChannel,
+                         TextChannel,
+                         Thread,
+                         VoiceChannel
                          )
 from .emoji       import Emoji
 from .enums       import (
@@ -51,7 +59,18 @@ class Constructor:
   def channel(data : Dict[str, Any]) -> Union[TextChannel]:
     try:
       channel_classes : Dict[ChannelType, GuildChannel] = {
-        ChannelType.text : TextChannel
+        ChannelType.announcement        : AnnouncementChannel,
+        ChannelType.announcement_thread : Thread,
+        ChannelType.category            : CategoryChannel,
+        ChannelType.dm                  : DMChannel,
+        ChannelType.forum               : Forum,
+        ChannelType.group_dm            : DMChannel,
+        ChannelType.media               : MediaChannel,
+        ChannelType.private_thread      : Thread,
+        ChannelType.public_thread       : Thread,
+        ChannelType.stage               : StageChannel,
+        ChannelType.text                : TextChannel,
+        ChannelType.voice               : VoiceChannel
       }
       channel : GuildChannel = channel_classes[ChannelType(data["type"])]()
       channel.__dict__["ws"] : DiscordWebSocket = Constructor.ws
@@ -131,6 +150,8 @@ class Constructor:
             channel.__dict__[attribute] : Optional[str] = data[attribute]
           case "total_message_sent":
             channel.__dict__[attribute] : int = data[attribute]
+          case "type":
+            channel.__dict__[attribute] : ChannelType = ChannelType(data[attribute])
           case "user_limit":
             channel.__dict__[attribute] : int = data[attribute]
           case "video_quality_mode":

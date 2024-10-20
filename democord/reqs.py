@@ -29,6 +29,7 @@ class PATCH(Enum):
   Utilizes the PATCH API method
   """
 
+  channel : Callable[[int], str] = lambda channel_id : f"/channels/{channel_id}"
   guild : Callable[[int], str] = lambda guild_id: f"/guilds/{guild_id}"
   member : Callable[[int, int], str] = lambda guild_id, member_id : f"/guilds/{guild_id}/members/{member_id}"
 

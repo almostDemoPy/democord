@@ -233,3 +233,8 @@ class VerificationLevel(Enum):
   medium    = 2
   high      = 3
   very_high = 4
+
+
+class VideoQualityMode(Enum):
+  auto = 1
+  full = 2
