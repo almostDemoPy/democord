@@ -114,6 +114,12 @@ class GuildFeatures(Enum):
   welcome_screen = "WELCOME_SCREEN_ENABLED"
 
 
+class InviteType(Enum):
+  guild    = 0
+  group_dm = 1
+  friend   = 2
+
+
 class MFALevel(Enum):
   """
   Set multi-factor authentication level of a guild
