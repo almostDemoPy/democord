@@ -174,6 +174,52 @@ class GuildChannel:
       if self.ws.app.logger: self.ws.app.logger.error(error)
 
 
+  async def create_thread(self, **attributes) -> Thread:
+    try:
+      reason : Optional[str] = str(attributes["reason"]) if attributes.get("reason") else None
+      data : Dict[str, Any] = {}
+      if not attributes.get("name"):
+        raise Constructor.exception(MissingArguments, "name")
+      for attribute in attributes:
+        match attribute:
+          case "auto_archive_duration":
+            if not isinstance(attributes[attribute], int):
+              raise TypeError(f"{attribute}: must be of type <int>")
+            if attributes[attribute] not in [60, 1440, 4_320, 10_080]:
+              raise ValueError(f"{attribute}: can only specify as 60, 1440, 4320, or 10080")
+            data[attribute] : int = attributes[attribute]
+          case "invitable":
+            if not isinstance(attributes[attribute], bool):
+              raise TypeError(f"{attribute}: must be of type <bool>")
+            data[attribute] : bool = attributes[attribute]
+          case "name":
+            if not isinstance(attributes[attribute], str):
+              raise TypeError(f"{attribute}: must be of type <str>")
+            if len(attributes[attribute]) < 0 or len(attributes[attribute]) > 100:
+              raise ValueError(f"{attribute}: must be between 1 and 100 characters")
+            data[attribute] : str = attributes[attribute]
+          case "slowmode":
+            if not isinstance(attributes[attribute], (int, None)):
+              raise TypeError(f"{attribute}: must be of type <int> or <NoneType>")
+            if attributes[attribute] < 0 or attributes[attribute] > 21_600:
+              raise ValueError(f"{attribute}: must be between 0 and 21600")
+            data[attribute] : Optional[int] = attributes[attribute]
+          case "type":
+            if not isinstance(attributes[attribute], ChannelType):
+              raise TypeError(f"{attribute}: must be of type <ChannelType>")
+            if attributes[attribute] not in [ChannelType.public_thread, ChannelType.private_thread]:
+              raise ValueError(f"{attribute}: can only be specified as ChannelType.public_thread or ChannelType.private_thread")
+            data[attribute] : int = attributes[attribute].value
+      response : Dict[str, Any] = self.ws.post(
+        POST.start_thread(self.id),
+        data = data,
+        reason = reason
+      )
+      return Constructor.channel(response)
+    except Exception as error:
+      if self.ws.app.logger: self.ws.app.logger.error(error)
+
+
   async def delete(self, reason : Optional[str] = None) -> Self:
     try:
       response : Dict[str, Any] = self.ws.delete(
@@ -375,6 +421,12 @@ class AnnouncementChannel(GuildChannel):
 
 
 class CategoryChannel(GuildChannel):
+  async def create_thread(self) -> None:
+    try:
+      raise NotImplemented("cannot create thread in a CategoryChannel")
+    except Exception as error:
+      if self.ws.app.logger: self.ws.app.logger.error(error)
+
 
   async def edit(
     self,
@@ -714,6 +766,12 @@ class TextChannel(GuildChannel):
 
 
 class Thread(GuildChannel):
+  async def create_thread(self) -> None:
+    try:
+      raise NotImplemented("cannot create thread in a Thread")
+    except Exception as error:
+      if self.ws.app.logger: self.ws.app.logger.error(error)
+
 
   async def edit(
     self,
