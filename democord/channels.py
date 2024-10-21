@@ -18,6 +18,7 @@ from .flags       import ChannelFlags
 from .guild       import Guild
 from .invite      import Invite
 from .member      import Member
+from .message     import Message
 from .permissions import PermissionOverwrites
 from .reqs        import (
                          DELETE,
@@ -247,6 +248,16 @@ class GuildChannel:
       if self.ws.app.logger: self.ws.app.logger.error(error)
 
 
+  async def pins(self) -> List[Message]:
+    try:
+      response : List[Dict[str, Any]] = self.ws.get(
+        GET.pinned_messages(self.id)
+      )
+      return [Constructor.message(data) for data in response]
+    except Exception as error:
+      if self.ws.app.logger: self.ws.app.logger.error(error)
+
+
   async def remove_overwrites(self, target : Union[Member, Role], reason : Optional[str] = None) -> None:
     try:
       response : Dict[None] = self.ws.delete(
@@ -391,6 +402,13 @@ class CategoryChannel(GuildChannel):
             data[attributes] : int = attributes[attribute]
       self : Self = await super().edit(data = data, reason = reason)
       return self
+    except Exception as error:
+      if self.ws.app.logger: self.ws.app.logger.error(error)
+
+
+  async def pins(self) -> None:
+    try:
+      raise NotImplemented("cannot retrieve pinned messages of a CategoryChannel")
     except Exception as error:
       if self.ws.app.logger: self.ws.app.logger.error(error)
 

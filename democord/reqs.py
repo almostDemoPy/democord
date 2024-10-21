@@ -26,6 +26,7 @@ class GET(Enum):
   guild_preview  : Callable[[int], str] = lambda guild_id               : f"/guilds/{guild_id}/preview"
   member         : Callable[[int, int], str] = lambda guild_id, member_id    : f"/guilds/{guild_id}/members/{member_id}"
   members        : Callable[[int, int, int], str] = lambda guild_id, limit, after : f"/guilds/{guild_id}/members?limit={limit}&after={after}"
+  pinned_messages : Callable[[int], str] = lambda channel_id : f"/channels/{channel_id}/pins"
 
 class PATCH(Enum):
   """

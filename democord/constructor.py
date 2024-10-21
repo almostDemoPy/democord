@@ -50,6 +50,7 @@ from .invite      import (
                          InviteTarget
                          )
 from .member      import Member
+from .message     import Message
 from .permissions import PermissionOverwrites
 from .sticker     import Sticker
 from .user        import User
@@ -307,6 +308,12 @@ class Constructor:
         case "user": member.__dict__[attribute] : User = User.from_data(data[attribute])
         case "nick": member.__dict__[attribute] : str  = data[attribute]
     return member
+
+
+  @staticmethod
+  def message(data : Dict[str, Any]) -> Message:
+    # implement: Message
+    ...
 
 
   @staticmethod
