@@ -272,6 +272,11 @@ class GuildChannel:
       if self.ws.app.logger: self.ws.app.logger.error(error)
 
 
+  async def typing(self) -> None:
+    # implement: Typing
+    ...
+
+
 class AnnouncementChannel(GuildChannel):
 
   async def edit(
