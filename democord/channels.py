@@ -83,6 +83,14 @@ class DMChannel:
       if self.ws.app.logger: self.ws.app.logger.error(error)
 
 
+  async def typing(self) -> None:
+    try:
+      # implement: Typing
+      ...
+    except Exception as error:
+      if self.ws.app.logger: self.ws.app.logger.error(error)
+
+
 class GuildChannel:
   """
   Represents a guild channel. This can be further classified as TextChannel, VoiceChannel, ForumChannel, StageChannel, and Thread, when subclassed.
@@ -273,8 +281,11 @@ class GuildChannel:
 
 
   async def typing(self) -> None:
-    # implement: Typing
-    ...
+    try:
+      # implement: Typing
+      ...
+    except Exception as error:
+      if self.ws.app.logger: self.ws.app.logger.error(error)
 
 
 class AnnouncementChannel(GuildChannel):
@@ -380,6 +391,13 @@ class CategoryChannel(GuildChannel):
             data[attributes] : int = attributes[attribute]
       self : Self = await super().edit(data = data, reason = reason)
       return self
+    except Exception as error:
+      if self.ws.app.logger: self.ws.app.logger.error(error)
+
+
+  async def typing(self) -> None:
+    try:
+      raise NotImplemented("cannot trigger typing indicator in a CategoryChannel")
     except Exception as error:
       if self.ws.app.logger: self.ws.app.logger.error(error)
 
