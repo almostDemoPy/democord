@@ -12,6 +12,7 @@ class DELETE(Enum):
   guild : Callable[[int], str] = lambda guild_id: f"/guilds/{guild_id}"
   member : Callable[[int, int], str] = lambda guild_id, user_id : f"/guilds/{guild_id}/members/{user_id}"
   member_role : Callable[[int, int, int], str] = lambda guild_id, member_id, role_id : f"/guilds/{guild_id}/members/{member_id}/roles/{role_id}"
+  unpin_message : Callable[[int, int], str] = lambda channel_id, message_id : f"/channels/{channel_id}/pins/{message_id}"
 
 class GET(Enum):
   """
