@@ -33,6 +33,7 @@ from .enums       import (
 from .errors      import (
                          APILimit,
                          BotMissingPermissions,
+                         DiscordException,
                          Forbidden,
                          MissingArguments,
                          MissingPermissions,

@@ -15,6 +15,9 @@ class BotMissingPermissions(Exception):
     )
 
 
+class DiscordException(Exception): ...
+
+
 class Forbidden(Exception): ...
 
 

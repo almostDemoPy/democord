@@ -11,6 +11,7 @@ from .enums       import (
                          )
 from .errors      import (
                          BotMissingPermissions,
+                         DiscordException,
                          Forbidden,
                          MissingArguments,
                          NotFound
@@ -1012,6 +1013,19 @@ class TextChannel(GuildChannel):
 
 
 class Thread(GuildChannel):
+  async def add_member(self, member : Member) -> None:
+    try:
+      if not isinstance(member, Member):
+        raise TypeError("member: must be of type <Member>")
+      if self.archived:
+        raise Constructor.exception(DiscordException, message = "cannot add a member to an archived thread")
+      response : Dict[None] = self.ws.put(
+        PUT.add_thread_member(self.id, member.id)
+      )
+    except Exception as error:
+      if self.ws.app.logger: self.ws.app.logger.error(error)
+
+
   async def create_thread(self) -> None:
     try:
       raise NotImplemented("cannot create thread in a Thread")
@@ -1087,7 +1101,7 @@ class Thread(GuildChannel):
   async def join(self) -> None:
     try:
       if self.archived:
-        raise Constructor.exception(APILimit, message = "cannot join an archived thread")
+        raise Constructor.exception(DiscordException, message = "cannot join an archived thread")
       response : Dict[None] = self.ws.put(
         PUT.join_thread(self.id)
       )

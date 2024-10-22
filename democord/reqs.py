@@ -47,6 +47,7 @@ class POST(Enum):
   start_thread_in_forum_or_media : Callable[[int], str] = lambda channel_id : f"/channels/{channel_id}/threads"
 
 class PUT(Enum):
+  add_thread_member : Callable[[int, int], str] = lambda channel_id, member_id : f"/channels/{channel_id}/thread-members/{member_id}"
   channel_permissions : Callable[[int, int], str] = lambda channel_id, overwrites_id : f"/channels/{channel_id}/permissions/{overwrite_id}"
   join_thread : Callable[[int], str] = lambda channel_id : f"/channels/{channel_id}/thread-members/@me"
   member : Callable[[int, int], str] = lambda guild_id, user_id : f"/guilds/{guild_id}/members/{user_id}"
