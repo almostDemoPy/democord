@@ -1084,6 +1084,17 @@ class Thread(GuildChannel):
       if self.ws.app.logger: self.ws.app.logger.error(error)
 
 
+  async def join(self) -> None:
+    try:
+      if self.archived:
+        raise Constructor.exception(APILimit, message = "cannot join an archived thread")
+      response : Dict[None] = self.ws.put(
+        PUT.join_thread(self.id)
+      )
+    except Exception as error:
+      if self.ws.app.logger: self.ws.app.logger.error(error)
+
+
 class VoiceChannel(GuildChannel):
 
   async def edit(
