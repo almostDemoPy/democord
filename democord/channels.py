@@ -1109,6 +1109,17 @@ class Thread(GuildChannel):
       if self.ws.app.logger: self.ws.app.logger.error(error)
 
 
+  async def leave(self) -> None:
+    try:
+      if self.archived:
+        raise Constructor.exception(DiscordException, message = "cannot leave an archived thread")
+      response : Dict[None] = self.ws.delete(
+        DELETE.leave_thread(self.id)
+      )
+    except Exception as error:
+      if self.ws.app.logger: self.ws.app.logger.error(error)
+
+
 class VoiceChannel(GuildChannel):
 
   async def edit(

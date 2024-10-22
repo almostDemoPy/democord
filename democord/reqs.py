@@ -10,6 +10,7 @@ class DELETE(Enum):
   channel : Callable[[int], str] = lambda channel_id : f"/channels/{channel_id}"
   channel_permission : Callable[[int, int], str] = lambda channel_id, overwrite_id : f"/channels/{channel_id}/permissions/{overwrite_id}"
   guild : Callable[[int], str] = lambda guild_id: f"/guilds/{guild_id}"
+  leave_thread : Callable[[int], str] = lambda channel_id : f"/channels/{channel_id}/thread-members/@me"
   member : Callable[[int, int], str] = lambda guild_id, user_id : f"/guilds/{guild_id}/members/{user_id}"
   member_role : Callable[[int, int, int], str] = lambda guild_id, member_id, role_id : f"/guilds/{guild_id}/members/{member_id}/roles/{role_id}"
   unpin_message : Callable[[int, int], str] = lambda channel_id, message_id : f"/channels/{channel_id}/pins/{message_id}"
