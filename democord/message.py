@@ -9,6 +9,12 @@ from typing       import *
 
 class Message:
 
+  async def create_thread(self, **attributes) -> Thread:
+    # implement: await Message.create_thread(...)
+    # pending for Message minor update
+    ...
+
+
   async def pin(self, reason : Optional[str] = None) -> None:
     try:
       # check permission: manage_messages
