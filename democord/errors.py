@@ -31,3 +31,8 @@ class MissingArguments(Exception):
 class MissingPermissions(Exception):
   def __str__(self) -> str:
     return ", ".join([permission.name for permission in self.missing_permissions])
+
+
+class NotFound(Exception):
+  def __str__(self) -> str:
+    return ", ".join(self.missing)

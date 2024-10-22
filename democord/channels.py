@@ -1,4 +1,5 @@
 from .constructor import Constructor
+from .embed       import Embed
 from .emoji       import Emoji
 from .enums       import (
                          ChannelType,
@@ -11,7 +12,8 @@ from .enums       import (
 from .errors      import (
                          BotMissingPermissions,
                          Forbidden,
-                         MissingArguments
+                         MissingArguments,
+                         NotFound
                          )
 from .file        import File
 from .flags       import ChannelFlags
@@ -20,6 +22,7 @@ from .invite      import Invite
 from .member      import Member
 from .message     import Message
 from .permissions import PermissionOverwrites
+from .regex       import PATTERN
 from .reqs        import (
                          DELETE,
                          PATCH,
@@ -27,7 +30,10 @@ from .reqs        import (
                          PUT
                          )
 from .role        import Role
+from .sticker     import Sticker
 from .user        import User
+from pathlib      import Path
+from re           import findall
 from typing       import *
 
 if TYPE_CHECKING:
@@ -359,6 +365,8 @@ class AnnouncementChannel(GuildChannel):
           case "auto_archive_duration":
             if not isinstance(attributes[attribute], (int, None)):
               raise TypeError("auto_archive_duration: must be of type <int> or <NoneType>")
+            if attributes[attribute] not in [60, 1440, 4_320, 10_080]:
+              raise ValueError(f"{attribute}: must be a value of either 60, 1440, 4320, or 10080")
             data["default_auto_archive_duration"] : Optional[int] = attributes[attribute]
           case "name":
             if not isinstance(attributes[attribute], str):
@@ -474,6 +482,125 @@ class CategoryChannel(GuildChannel):
 
 class Forum(GuildChannel):
 
+  async def create_thread(self, **attributes) -> Thread:
+    try:
+      # check permission: send_messages
+      ...
+      reason : Optional[str] = str(attributes["reason"]) if attributes.get("reason") else None
+      data : Dict[str, Any] = {}
+      if not any([attributes.get(attribute) for attribute in ["content", "embeds", "name", "stickers", "panel", "files"]]):
+        raise Constructor.exception(MissingArguments, "content", "embeds", "files", "name", "panel", "stickers", message = "at least one must be provided")
+      for attribute in attributes:
+        match attribute:
+          case "attachments":
+            # implement: uploading attachments
+            ...
+          case "allowed_mentions":
+            allowed_mentions : Dict[str, Union[List[str], bool]] = {
+              "parse": [],
+              "roles": [mention[2 : -1] for mention in findall(PATTERN.role_mention, attributes["message"]["content"])],
+              "users": [mention[2 : -1] for mention in findall(PATTERN.user_mention, attributes["message"]["content"])]
+            }
+            if allowed_mentions["roles"]: allowed_mentions["parse"].append("roles")
+            if allowed_mentions["users"]: allowed_mentions["parse"].append("users")
+            if any([mention in attributes["message"]["content"] for mention in ["@everyone", "@here"]]): allowed_mentions["parse"].append("everyone")
+            if attributes.get("mention_author"):
+              if not isinstance(attributes["mention_author"], bool):
+                raise TypeError(f"mention_author: must be of type <bool>")
+              allowed_mentions["replied_user"] : bool = attributes.get("mention_author", False)
+            else:
+              allowed_mentions["replied_user"] : bool = False
+            data["message"][attribute] : Dict[str, Union[List[str], bool]] = allowed_mentions
+          case "auto_archive_duration":
+            if not isinstance(attributes[attribute], int):
+              raise TypeError(f"{attribute}: must be of type <int>")
+            if attributes[attribute] not in [60, 1440, 4_320, 10_080]:
+              raise ValueError(f"{attribute}: must be a value of either 60, 1440, 4320, or 10080")
+          case "content":
+            if not isinstance(attributes[attribute], str):
+              raise TypeError(f"{attribute}: must be of type <str>")
+            if len(attributes[attribute]) > 2_000:
+              raise Constructor.exception(APILimit, message = f"{attribute}: can only be up to 2000 characters")
+            attributes["message"][attribute] : str = attributes[attribute]
+          case "embeds":
+            if isinstance(attributes[attribute], list):
+              if len(attributes[attribute]) > 10:
+                raise Constructor.exception(APILimit, message = f"{attribute}: can only upload up to 10 embeds (up to 6000 characters)")
+              for embed in attributes[attribute]:
+                if not isinstance(embed, Embed):
+                  raise TypeError(f"{embed}: must contain <Embed> objects")
+              data["message"][attribute] : List[Dict[str, Any]] = [embed.payload for embed in attributes[attribute]]
+            elif isinstance(attributes[attribute], Embed):
+              data["message"][attribute] : List[Dict[str, Any]] = [attributes[attribute].payload]
+            else:
+              raise TypeError(f"{attribute}: must be of type <Embed>, or list of <Embed> objects")
+          case "files":
+            if isinstance(attributes[attribute], list):
+              if len(attributes[attribute]) > 10:
+                raise Constructor.exception(APILimit, message = f"{attribute}: can only upload up to 10 files per message")
+              total_size : int = 0
+              for file in attributes[attribute]:
+                if not isinstance(file, File):
+                  raise TypeError(f"{attribute}: must be a list of <File> objects")
+                total_size += Path(file.path).stat().st_size * 8
+              if total_size > 26_214_400 * 8:
+                raise Constructor.exception(APILimit, message = "can only upload files up to 25 MiB")
+              data[attribute] : List[Dict[str, Tuple[str, bytes, str]]] = [{str(index) : (attributes[attribute][index].filename, open(attributes[attribute][index].path, "rb"), attributes[attribute][index].type)} for index in range(len(attributes[attribute]))]
+            elif isinstance(attributes[attribute], File):
+              data[attribute] : Dict[str, Tuple[str, bytes, str]] = {"0" : (attributes[attribute][index].filename, open(attributes[attribute][index].path, "rb"), attributes[attribute][index].type)}
+            else:
+              raise TypeError(f"{attribute}: must be of type <File>, or a list of <File> objects")
+          case "flags":
+            # implement: MessageFlag
+            ...
+          case "name":
+            if not isinstance(attributes[attribute], str):
+              raise TypeError(f"{attribute}: must be of type <str>")
+            if len(attributes[attribute]) < 1 or len(attributes[attribute]) > 100:
+              raise ValueError(f"{attribute}: must be between 1 and 100 characters")
+            data[attribute] : str = attributes[attribute]
+          case "panel":
+            if not isinstance(attributes[attribute], Panel):
+              raise TypeError(f"{attribute}: must be of type <Panel>")
+            data[attribute] : List[Dict[str, Any]] = [component for component in attributes[attribute].children]
+          case "slowmode":
+            if not isinstance(attributes[attribute], (int, None)):
+              raise TypeError(f"{attribute}: must be of type <int> or <NoneType>")
+            if attributes[attribute] < 0 or attributes[attribute] > 21_600:
+              raise ValueError(f"{attribute}: must be between 0 and 21600")
+            data[attribute] : Optional[int] = attributes[attribute]
+          case "stickers":
+            if isinstance(attributes[attribute], list):
+              if len(attributes[attribute]) > 3:
+                raise Constructor.exception(APILimit, message = f"{attribute}: can only upload up to 3 stickers")
+              for sticker in attributes[attribute]:
+                if not isinstance(sticker, Sticker):
+                  raise TypeError(f"{sticker}: must contain <Sticker> objects")
+              data[attribute] : List[str] = [str(sticker.id) for sticker in attributes[attribute]]
+            elif isinstance(attributes[attribute], Sticker):
+              data[attribute] : List[str] = [str(attributes[attribute].id)]
+            else:
+              raise TypeError(f"{attribute}: must be of type <Sticker>, or a list of <Sticker> objects")
+          case "tags":
+            if isinstance(attributes[attribute], list):
+              for tag in attributes[attribute]:
+                if not isinstance(tag, ForumTag):
+                  raise TypeError(f"{attribute}: must contain <ForumTag> objects")
+                if tag not in self.tags:
+                  raise Constructor.exception(NotFound, f"ForumTag with ID {tag.id}")
+            else:
+              raise TypeError(f"{attribute}: must be of type <list> containing <ForumTag> objects")
+            data[attribute] : List[str] = [str(tag.id) for tag in attributes[attribute]]
+      response : Dict[str, Any] = self.ws.post(
+        POST.start_thread_in_forum_or_media(self.id),
+        data = data,
+        reason = reason
+      )
+      return Constructor.channel(response)
+    except Exception as error:
+      if self.ws.app.logger: self.ws.app.logger.error(error)
+
+
   async def edit(
     self,
     **attributes
@@ -541,7 +668,7 @@ class Forum(GuildChannel):
               raise TypeError("tags: must be of type <list> containing <ForumTag> objects")
             if len(attributes[attribute]) > 20:
               raise ValueError("tags: can only create up to 20 Forum tags")
-            data["available_tags"] : List[Dict[str, Any]] = [tag.data for tag in attributes[attribute]]
+            data["available_tags"] : List[Dict[str, Any]] = [tag.payload for tag in attributes[attribute]]
           case "thread_slowmode":
             if not isinstance(attributes[attribute], int):
               raise TypeError("thread_slowmode: must be of type <int>")
@@ -625,7 +752,7 @@ class MediaChannel(GuildChannel):
               raise TypeError("tags: must be of type <list> containing <ForumTag> objects")
             if len(attributes[attribute]) > 20:
               raise ValueError("tags: can only create up to 20 Media tags")
-            data[attribute] : List[Dict[str, Any]] = [tag.data for tag in attributes[attribute]]
+            data[attribute] : List[Dict[str, Any]] = [tag.payload for tag in attributes[attribute]]
           case "thread_slowmode":
             if not isinstance(attributes[attribute], int):
               raise TypeError("thread_slowmode: must be of type <int>")

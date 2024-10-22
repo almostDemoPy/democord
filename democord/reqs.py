@@ -44,6 +44,7 @@ class POST(Enum):
   guild : str = "/guilds"
   typing_indicator : Callable[[int], str] = lambda channel_id : f"/channels/{channel_id}/typing"
   start_thread : Callable[[int], str] = lambda channel_id : f"/channels/{channel_id}/threads"
+  start_thread_in_forum_or_media : Callable[[int], str] = lambda channel_id : f"/channels/{channel_id}/threads"
 
 class PUT(Enum):
   channel_permissions : Callable[[int, int], str] = lambda channel_id, overwrites_id : f"/channels/{channel_id}/permissions/{overwrite_id}"

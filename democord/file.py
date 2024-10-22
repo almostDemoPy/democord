@@ -31,5 +31,6 @@ class File:
     file.data : str = image_data
     file.type : str = f"image/{extension}"
     file.filename : str = filename or basename(filepath)
+    file.path : str = filepath
     if extension != filename.split(".")[-1]: raise ValueError("File extension and filename does not match extensions")
     return file

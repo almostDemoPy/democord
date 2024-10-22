@@ -163,6 +163,18 @@ class DiscordWebSocket:
     data     : Dict[str, Any],
     reason   : Optional[str] = None
   ) -> Dict[str, Any]:
+    if data.get("files"):
+      return loads(
+        requests.post(
+          f"{self.api}{endpoint}",
+          headers = {
+            "Authorization": f"Bot {self.app._App__token}",
+            "X-Audit-Log-Reason": reason
+          },
+          json = dumps(data),
+          files = data["files"]
+        )
+      )
     return loads(
       requests.post(
         f"{self.api}{endpoint}",

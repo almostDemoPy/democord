@@ -35,7 +35,8 @@ from .errors      import (
                          BotMissingPermissions,
                          Forbidden,
                          MissingArguments,
-                         MissingPermissions
+                         MissingPermissions,
+                         NotFound
                          )
 from .file        import File
 from .flags       import ChannelFlags
@@ -128,6 +129,8 @@ class Constructor:
             channel.__dict__[attribute] : Member = None
           case "member_count":
             channel.__dict__[attribute] : int = data[attribute]
+          case "message":
+            channel.__dict__["starter_message"] : Message = Constructor.message(data[attribute])
           case "message_count":
             channel.__dict__[attribute] : int = data[attribute]
           case "name":
@@ -186,6 +189,8 @@ class Constructor:
         error.missing_permissions : List[PermissionFlags] = [permission for permission in data if isinstance(permission, PermissionFlags)]
       case MissingArguments:
         error.missing_arguments : List[str] = [argument for argument in data]
+      case NotFound:
+        error.missing : List[str] = list(data)
     return error
 
 
