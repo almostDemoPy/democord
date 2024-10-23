@@ -13,6 +13,7 @@ class DELETE(Enum):
   leave_thread : Callable[[int], str] = lambda channel_id : f"/channels/{channel_id}/thread-members/@me"
   member : Callable[[int, int], str] = lambda guild_id, user_id : f"/guilds/{guild_id}/members/{user_id}"
   member_role : Callable[[int, int, int], str] = lambda guild_id, member_id, role_id : f"/guilds/{guild_id}/members/{member_id}/roles/{role_id}"
+  remove_thread_member : Callable[[int, int], str] = lambda channel_id, member_id : f"/channels/{channel_id}/thread-members/{member_id}"
   unpin_message : Callable[[int, int], str] = lambda channel_id, message_id : f"/channels/{channel_id}/pins/{message_id}"
 
 class GET(Enum):

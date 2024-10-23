@@ -1109,6 +1109,20 @@ class Thread(GuildChannel):
       if self.ws.app.logger: self.ws.app.logger.error(error)
 
 
+  async def remove_member(self, member : Member) -> None:
+    try:
+      if not isinstance(member, Member):
+        raise TypeError("member: must be of type <Member>")
+      # check permission: manage_threads
+      if self.type == ChannelType.private_thread and self.owner != self.guild.me:
+        raise Constructor.exception(DiscordException, message = "cannot delete a thread you do not own")
+      response : Dict[None] = self.ws.delete(
+        DELETE.remove_thread_member(self.id, member.id)
+      )
+    except Exception as error:
+      if self.ws.app.logger: self.ws.app.logger.error(error)
+
+
   async def leave(self) -> None:
     try:
       if self.archived:
