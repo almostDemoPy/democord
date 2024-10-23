@@ -1111,6 +1111,16 @@ class Thread(GuildChannel):
       if self.ws.app.logger: self.ws.app.logger.error(error)
 
 
+  async def fetch_members(self) -> List[ThreadMember]:
+    try:
+      response : List[Dict[str, Any]] = self.ws.get(
+        GET.thread_members(self.id)
+      )
+      return [Constructor.thread_member(data) for data in response]
+    except Exception as error:
+      if self.ws.app.logger: self.ws.app.logger.error(error)
+
+
   async def join(self) -> None:
     try:
       if self.archived:
