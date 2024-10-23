@@ -1098,6 +1098,19 @@ class Thread(GuildChannel):
       if self.ws.app.logger: self.ws.app.logger.error(error)
 
 
+  async def fetch_member(self, member_id : int) -> ThreadMember:
+    try:
+      if not isinstance(member_id, int):
+        raise TypeError("member_id: must be of type <int>")
+      response : Dict[str, Any] = self.ws.get(
+        GET.thread_member(self.id, member_id)
+      )
+      # handle error code: 404
+      return Constructor.thread_member(response)
+    except Exception as error:
+      if self.ws.app.logger: self.ws.app.logger.error(error)
+
+
   async def join(self) -> None:
     try:
       if self.archived:

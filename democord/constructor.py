@@ -53,6 +53,10 @@ from .invite      import (
                          )
 from .member      import Member
 from .message     import Message
+from .metaclasses import (
+                         BasePayload,
+                         ThreadMemberPayload
+                         )
 from .permissions import PermissionOverwrites
 from .sticker     import Sticker
 from .user        import User
@@ -323,9 +327,24 @@ class Constructor:
 
 
   @staticmethod
+  def payload(cls : BasePayload, data : Dict[str, Any]) -> BasePayload:
+    payload : BasePayload = cls()
+    for attribute in data:
+      payload.__dict__[attribute] = data[attribute]
+    return payload
+
+
+  @staticmethod
   def sticker(data : Dict[str, Any]) -> Sticker:
     sticker : Sticker = Sticker()
     return sticker
+
+
+  @staticmethod
+  def thread_member(payload : ThreadMemberPayload) -> ThreadMember:
+    thread_member : ThreadMember = ThreadMember()
+    thread_member.__payload = payload
+    return thread_member
 
   
   @staticmethod

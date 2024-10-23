@@ -149,3 +149,9 @@ class Member:
       return self
     except Exception as error:
       if self.ws.app.logger: self.ws.app.logger.error(error)
+
+
+class ThreadMember:
+  @property
+  def id(self) -> int:
+    return int(self.__payload["id"])
