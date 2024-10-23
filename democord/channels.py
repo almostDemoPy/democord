@@ -311,6 +311,20 @@ class GuildChannel:
       if self.ws.app.logger: self.ws.app.logger.error(error)
 
 
+  async def archived_threads(self, public : bool = True) -> List[Thread]:
+    try:
+      # check permission: read_message_history
+      if not public:
+        # check permission: manage_threads
+        ...
+      response : List[Dict[str, Any]] = self.ws.get(
+        GET.archived_threads(self.id, "public" if public else "private")
+      )
+      return [Constructor.thread(data) for data in response]
+    except Exception as error:
+      if self.ws.app.logger: self.ws.app.logger.error(error)
+
+
   async def remove_overwrites(self, target : Union[Member, Role], reason : Optional[str] = None) -> None:
     try:
       response : Dict[None] = self.ws.delete(
@@ -470,6 +484,13 @@ class CategoryChannel(GuildChannel):
   async def pins(self) -> None:
     try:
       raise NotImplemented("cannot retrieve pinned messages of a CategoryChannel")
+    except Exception as error:
+      if self.ws.app.logger: self.ws.app.logger.error(error)
+
+
+  async def archived_threads(self) -> None:
+    try:
+      raise NotImplemented("cannot retrieve archived threads of a CategoryChannel")
     except Exception as error:
       if self.ws.app.logger: self.ws.app.logger.error(error)
 
