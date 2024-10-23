@@ -27,6 +27,7 @@ class GET(Enum):
   guild          : Callable[[int, int], str] = lambda guild_id, with_counts  : f"/guilds/{guild_id}?with_counts={with_counts}"
   guild_channels : Callable[[int], str] = lambda guild_id               : f"/guilds/{guild_id}/channels"
   guild_preview  : Callable[[int], str] = lambda guild_id               : f"/guilds/{guild_id}/preview"
+  joined_archived_threads : Callable[[int], str] = lambda channel_id : f"/channels/{channel_id}/users/@me/threads/archived/private"
   member         : Callable[[int, int], str] = lambda guild_id, member_id    : f"/guilds/{guild_id}/members/{member_id}"
   members        : Callable[[int, int, int], str] = lambda guild_id, limit, after : f"/guilds/{guild_id}/members?limit={limit}&after={after}"
   pinned_messages : Callable[[int], str] = lambda channel_id : f"/channels/{channel_id}/pins"

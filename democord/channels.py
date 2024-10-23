@@ -311,12 +311,17 @@ class GuildChannel:
       if self.ws.app.logger: self.ws.app.logger.error(error)
 
 
-  async def archived_threads(self, public : bool = True) -> List[Thread]:
+  async def archived_threads(self, public : bool = True, joined : bool = False) -> List[Thread]:
     try:
       # check permission: read_message_history
       if not public:
         # check permission: manage_threads
         ...
+      if joined:
+        response : List[Dict[str, Any]] = self.ws.get(
+          GET.joined_archived_threads(self.id)
+        )
+        return [Constructor.thread(data) for data in response]
       response : List[Dict[str, Any]] = self.ws.get(
         GET.archived_threads(self.id, "public" if public else "private")
       )
