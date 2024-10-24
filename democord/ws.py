@@ -1,7 +1,3 @@
-import asyncio
-import rel
-import requests
- 
 from .appinfo     import AppInfo
 from .constructor import Constructor
 from .enums       import (
@@ -25,6 +21,10 @@ from traceback    import print_exc
 from typing       import *
 from websocket    import WebSocketApp
 
+import asyncio
+import rel
+import requests
+ 
 if TYPE_CHECKING:
   from .app import App
 

@@ -1,9 +1,12 @@
 from .channels import VoiceChannel
-from .reqs import PATCH
-from .role import Role
-from .user  import User
-from datetime import datetime, timedelta
-from typing import *
+from .reqs     import PATCH
+from .role     import Role
+from .user     import User
+from datetime  import (
+                      datetime,
+                      timedelta
+                      )
+from typing    import *
 
 
 class Member:

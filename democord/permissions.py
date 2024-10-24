@@ -1,7 +1,7 @@
 from .enums  import (
                     PermissionFlags
                     )
-from typing import *
+from typing  import *
 
 
 class Permissions: pass

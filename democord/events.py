@@ -10,7 +10,7 @@ from traceback import TracebackException
 from typing    import *
 
 if TYPE_CHECKING:
-  from .app import App
+  from .app    import App
 
 
 class AppEvents:

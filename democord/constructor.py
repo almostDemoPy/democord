@@ -64,7 +64,7 @@ from datetime     import datetime
 from typing       import *
 
 if TYPE_CHECKING:
-  from .ws     import DiscordWebSocket
+  from .ws        import DiscordWebSocket
 
 
 class Constructor:

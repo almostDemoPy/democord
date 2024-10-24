@@ -38,7 +38,7 @@ from re           import findall
 from typing       import *
 
 if TYPE_CHECKING:
-  from .ws   import DiscordWebSocket
+  from .ws        import DiscordWebSocket
 
 
 class DMChannel:
